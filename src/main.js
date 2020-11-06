@@ -2,12 +2,14 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import elementUi from 'element-ui'
 
 //自己添加的
 import Vant from "vant"; //引入vant
 import "vant/lib/index.css"; // 引入vant的css文件
 import "nprogress/nprogress.css"; //加载进度条
 Vue.use(Vant);
+Vue.use(elementUi)
 
 //脚手架默认的配置-statr
 Vue.config.productionTip = false;
