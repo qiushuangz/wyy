@@ -18,7 +18,7 @@
           :offset="index > 0 ? 2 : 0"
         >
           <el-card :body-style="{ padding: '0px' }">
-            <img src="~examples/assets/images/hamburger.png" class="image" />
+            <img src="" class="image" />
             <div style="padding: 14px">
               <span>好吃的汉堡</span>
               <!-- <div class="bottom clearfix">
@@ -32,7 +32,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
