@@ -3,6 +3,12 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 
+import axios from "axios";
+
+axios.defaults.withCredentials = true; //让ajax携带cookie
+
+Vue.prototype.$axios = axios;
+
 //自己添加的
 import Vant from "vant"; //引入vant
 import "vant/lib/index.css"; // 引入vant的css文件
