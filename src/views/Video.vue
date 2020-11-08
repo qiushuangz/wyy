@@ -1,9 +1,16 @@
 <template>
-  <div class="video">我是视频页</div>
+  <div class="video">
+    <topbar></topbar>
+  </div>
 </template>
 
 <script>
-export default {};
+import topbar from "@/views/Topbar";
+export default {
+  components: {
+    topbar,
+  },
+};
 </script>
 
 <style scoped>

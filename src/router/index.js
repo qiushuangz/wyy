@@ -2,9 +2,20 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 // import Home from '../views/Home.vue'
 
+//避免重复提交路由报错
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch((err) => err);
+};
+
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    // 默认跳转到 '我的'
+    path: "/",
+    redirect: "/mine",
+  },
   {
     path: "/login",
     name: "Login",

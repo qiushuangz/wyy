@@ -1,5 +1,6 @@
 <template>
   <div class="mine">
+    <topbar></topbar>
     <div class="login">
       <van-icon
         class="icon"
@@ -32,19 +33,24 @@
     </div>
   </div>
 </template>
+
 <script>
+import topbar from "@/views/Topbar";
 export default {
   data() {
     return {
       currentDate: new Date(),
     };
   },
+  components: {
+    topbar,
+  },
 };
 </script>
 
 <style scoped>
 .mine {
-  padding: 6vw;
+  /* padding: 6vw; */
 }
 .login {
   height: 10vw;

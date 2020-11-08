@@ -1,9 +1,17 @@
 <template>
-  <div class="find">我是发现页</div>
+  <div class="find">
+    <topbar></topbar>
+  </div>
 </template>
 
 <script>
-export default {};
+import topbar from "@/views/Topbar";
+
+export default {
+  components: {
+    topbar,
+  },
+};
 </script>
 
 <style scoped>

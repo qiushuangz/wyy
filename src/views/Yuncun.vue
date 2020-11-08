@@ -1,5 +1,7 @@
 <template>
   <div class="yuncun">
+    <topbar></topbar>
+
     <van-tabs animated>
       <van-tab title="关注"> 888 </van-tab>
       <van-tab title="热评墙">
@@ -30,6 +32,8 @@
 </template>
 
 <script>
+import topbar from "@/views/Topbar";
+
 import { loginAPI, statusAPI, loginoutAPI, gettrendsAPI } from "@/api/yuncun";
 export default {
   data() {
@@ -58,6 +62,9 @@ export default {
       const log_out = await loginoutAPI();
       console.log(log_out);
     },
+  },
+  components: {
+    topbar,
   },
 };
 </script>
