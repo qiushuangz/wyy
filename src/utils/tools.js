@@ -3,20 +3,20 @@ export const serverUrl = "https://jarvan.cn";
 
 //判断是否登陆
 export function isLogined() {
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem("uid")) {
     return true;
   }
   return false;
 }
-//设置token
-export function setToken(val) {
-  localStorage.setItem("token", val);
+//设置uid
+export function setuid(val) {
+  localStorage.setItem("uid", val);
 }
-//取token
-export function getToken() {
-  return localStorage.getItem("token");
+//取uid
+export function getuid() {
+  return localStorage.getItem("uid");
 }
-//移除token
-export function removeToken() {
-  localStorage.removeItem("token");
+//移除uid
+export function removeuid() {
+  localStorage.removeItem("uid");
 }

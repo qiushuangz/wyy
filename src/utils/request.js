@@ -3,6 +3,7 @@ import { Notify } from "vant";
 import NProgress from "nprogress";
 import { serverUrl, removeToken } from "./tools";
 // import Vue from "vue";
+NProgress.configure({ showSpinner: false });
 const instance = axios.create({
   timeout: 5000, // 请求超时时间
   baseURL: serverUrl, // 请求的基础地址
@@ -71,10 +72,6 @@ instance.interceptors.response.use(
  * @param {*} params
  */
 export const get = (url, params) => instance.get(url, { params });
-
-// export function get(url, params) {
-//   return instance.get(url, { params })
-// }
 
 /**
  * 发起post请求

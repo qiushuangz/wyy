@@ -51,5 +51,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.icon_top:hover {
+  color: #ec4141;
+}
 </style>
