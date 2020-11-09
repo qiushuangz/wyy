@@ -15,13 +15,15 @@
     <!-- 请输入用户名文本框 -->
     <el-input
       v-model="username"
-      placeholder="请输入用户名"
+      type="text"
+      placeholder="请使用网易云真实手机号"
       style="width: 80%; height: 30px; margin-left: 10%; margin-top: 55%"
     />
     <!-- 请输入密码文本框 -->
     <el-input
       v-model="password"
-      placeholder="请输入密码"
+      type="password"
+      placeholder="请使用网易云真实密码输入"
       style="width: 80%; height: 30px; margin-left: 10%; margin-top: 5%"
     />
     <!-- 登录按钮 -->
@@ -76,6 +78,7 @@
 
 <script>
 // import axios from "axios";
+import { Notify } from "vant";
 import { loginAPI } from "@/api/login";
 export default {
   data() {
@@ -92,15 +95,44 @@ export default {
 
   methods: {
     async loginBtn() {
-      const res = await loginAPI(this.username, this.password);
-
-      if (res.code == 200) {
-        console.log(res);
-        console.log(res.account.id);
-        localStorage.setItem("uid", res.account.id);
-        // 存到localstro里
+      // 判断手机号和密码不为空
+      if (this.username != "" && this.password != "") {
+        let tel = /^1(3|4|5|6|7|8|9)\d{9}$/;
+        //判断用户输入的是手机号
+        // let email = /^\w+@\w+(\.\w+)+$/;
+        if (tel.test(this.username)) {
+          // 判断用户是否勾选用户条例
+          if (this.checked) {
+            const res = await loginAPI(this.username, this.password);
+            console.log(res.code);
+            console.log(res);
+            // 判断手机号密码是否正确
+            if (res.code == 200) {
+              console.log(res.account.id);
+              // 判断他是否已经登录
+              if (localStorage.getItem("uid") == res.account.id) {
+                Notify("您已经登录,不能重复登录");
+                this.$router.push({ name: "Mine" });
+                //
+              } else {
+                // 否则，把res.account.id存到localStorage
+                localStorage.setItem("uid", res.account.id);
+                this.$router.push({ name: "Mine" });
+              }
+              // localStorage
+            } else {
+              // 报错
+              console.log(res.msg);
+              Notify(res.msg);
+            }
+          } else {
+            Notify("请同意用户条例");
+          }
+        } else {
+          Notify("请输入正确的手机号");
+        }
       } else {
-        console.log(res.msg);
+        Notify("请输入账户名密码");
       }
     },
   },
