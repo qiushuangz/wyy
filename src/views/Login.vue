@@ -49,22 +49,22 @@
     <el-image :src="social" style="width: 80%; margin: 5% 10% 0" alt="" />
     <!-- 同意协议 -->
     <el-row :gutter="10" style="margin-top: 5%">
-      <el-col :xs="4" :sm="4" :md="4" push="2"
+      <el-col :xs="4" :sm="4" :md="4"
         ><div class="grid-content bg-purple">
           <el-checkbox v-model="checked">同意</el-checkbox>
         </div></el-col
       >
-      <el-col :xs="6" :sm="6" :md="8" push="2"
+      <el-col :xs="6" :sm="6" :md="8"
         ><div class="grid-content bg-purple-light item">
           《用户协议》
         </div></el-col
       >
-      <el-col :xs="6" :sm="6" :md="8" push="1"
+      <el-col :xs="6" :sm="6" :md="8"
         ><div class="grid-content bg-purple-light item">
           《隐私政策》
         </div></el-col
       >
-      <el-col :xs="8" :sm="6" :md="8" push="0"
+      <el-col :xs="8" :sm="6" :md="8"
         ><div class="grid-content bg-purple-light item">
           《儿童隐私政策》
         </div></el-col
@@ -75,7 +75,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { loginAPI } from "@/api/login";
 export default {
   data() {
     return {
@@ -90,9 +91,17 @@ export default {
   },
 
   methods: {
-    loginBtn() {
-      axios.get("");
-      console.log(this.username, this.password);
+    async loginBtn() {
+      const res = await loginAPI(this.username, this.password);
+
+      if (res.code == 200) {
+        console.log(res);
+        console.log(res.account.id);
+        localStorage.setItem("uid", res.account.id);
+        // 存到localstro里
+      } else {
+        console.log(res.msg);
+      }
     },
   },
 };
