@@ -85,6 +85,9 @@ export default {
 </script>
 
 <style scoped>
+.hotwall{
+  padding: 0 6vw;
+}
 .img_tou {
   width: 8vw;
   border-radius: 4vw;
