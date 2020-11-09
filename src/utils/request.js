@@ -1,13 +1,15 @@
 import axios from "axios";
 import { Notify } from "vant";
 import NProgress from "nprogress";
-import { serverUrl, getToken, removeToken } from "./tools";
-
+import { serverUrl, removeToken } from "./tools";
+// import Vue from "vue";
+NProgress.configure({ showSpinner: false });
 const instance = axios.create({
   timeout: 5000, // 请求超时时间
   baseURL: serverUrl, // 请求的基础地址
 });
-
+// axios.defaults.withCredentials = true;
+// Vue.prototype.$axios = axios;
 // 继续封装一个请求和相应拦截
 // 比如有些服务器接口在请求之前需要添加全局统一的配置信息
 //  我们需要对网络请求的异常做统一捕获
@@ -16,14 +18,15 @@ const instance = axios.create({
 //    1. 添加全局loading
 //    1. 在请求头添加token
 instance.interceptors.request.use(
-  function (config) {
+  function(config) {
     NProgress.start();
+    // config.headers.cookie = "1355";
     // Do something before request is sent
     /// 做了一个全局请求拦截，所有的网络请求触发之前都会加
-    config.headers.authorization = "Bearer " + getToken(); // 在请求头中添加token
+    // config.headers.authorization = "Bearer " + getToken(); // 在请求头中添加token
     return config;
   },
-  function (error) {
+  function(error) {
     // Do something with request error
     return Promise.reject(error);
   }
@@ -34,13 +37,13 @@ instance.interceptors.request.use(
 //  1. 清除loading
 //  2. 错误异常处理
 instance.interceptors.response.use(
-  function (response) {
+  function(response) {
     NProgress.done();
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response.data;
   },
-  function (error) {
+  function(error) {
     NProgress.done();
     console.dir(error);
     if (error.message && error.message.indexOf("timeout") > -1) {
@@ -69,10 +72,6 @@ instance.interceptors.response.use(
  * @param {*} params
  */
 export const get = (url, params) => instance.get(url, { params });
-
-// export function get(url, params) {
-//   return instance.get(url, { params })
-// }
 
 /**
  * 发起post请求

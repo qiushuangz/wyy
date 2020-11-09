@@ -23,10 +23,12 @@
       <el-tab-pane label="翻唱" name="fifth">角色管理</el-tab-pane>
       <el-tab-pane label="歌曲" name="sixth">定时任务补偿</el-tab-pane>
     </el-tabs>
+    <topbar></topbar>
   </div>
 </template>
 
 <script>
+import topbar from "@/views/Topbar";
 export default {
   data() {
     return {
@@ -37,6 +39,9 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
     },
+  },
+  components: {
+    topbar,
   },
 };
 </script>
