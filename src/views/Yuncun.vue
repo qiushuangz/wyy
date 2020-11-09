@@ -36,6 +36,7 @@ export default {
   methods: {
     async login() {
       const u = await loginAPI();
+      // console.log(u);
       console.log(u.account.id);
       setuid(u.account.id);
     },
