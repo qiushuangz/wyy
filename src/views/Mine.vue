@@ -1,91 +1,98 @@
 <template>
   <div class="mine">
     <topbar></topbar>
-    <div class="login">
-      <van-icon
-        class="icon"
-        color="pink"
-        size="10vw"
-        name="https://b.yzcdn.cn/vant/icon-demo-1126.png"
-      />
-      <span>立即登录 &gt;</span>
-    </div>
-    <div class="list">
-      <dl v-for="item in Img" :key="item.title">
-        <dt>
-          <img :src="item.img" style="width:8vw;height:8vw" alt="" />
-        </dt>
-        <dd>{{ item.title }}</dd>
-      </dl>
-    </div>
-    <div class="heart">
-      <div class="music">
-        <img src="@/assets/mine/tubiao/woxihuan.png" alt="" />
-        <div class="like">
-          <p>我喜欢的音乐</p>
-          <p>0首</p>
+    <div class="login_l">
+      <div class="login" @click="picture">
+        <div class="left">
+          <img :src="photo" class="icon" size="10vw" />
+          <span>{{ chara }}</span>
+        </div>
+        <div class="right">
+          <span>&gt;</span>
         </div>
       </div>
-      <div class="move">
-        <el-button style="margin-top: 5vw">
-          <span>♥</span>
-          心动模式</el-button
-        >
+      <div class="list">
+        <dl v-for="item in Img" :key="item.title">
+          <dt>
+            <img :src="item.img" style="width: 8vw; height: 8vw" alt="" />
+          </dt>
+          <dd>{{ item.title }}</dd>
+        </dl>
       </div>
-    </div>
-    <van-tabs v-model="active">
-      <van-tab  title="创建歌单" title-style="font-size:4vw;font-weight:800">
-        <div class="create">
-          <div class="songs">
-            <p class="left">
-              <span>创建歌单</span>
-            </p>
-            <div class="right">
-              <span>+</span>.
-              <img
-                src="@/assets/mine/tubiao/gengduo.png"
-                sty1e="width:3vw;height:3vw;display:inline-block"
-                alt=""
-              />
-            </div>
-          </div>
-          <div class="download">
-            <p><img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" /></p>
-            <span>导入外部歌单</span>
+      <div class="heart">
+        <div class="music">
+          <img src="@/assets/mine/tubiao/woxihuan.png" alt="" />
+          <div class="like">
+            <p>我喜欢的音乐</p>
+            <p>{{ count }}首</p>
           </div>
         </div>
-        <div class="create">
-          <div class="songs">
-            <p class="left">
-              <span>收藏歌单</span>
-            </p>
-            <div class="right">
-              <img
-                src="@/assets/mine/tubiao/gengduo.png"
-                sty1e="width:3vw;height:3vw;display:inline-block"
-                alt=""
-              />
+        <div class="move">
+          <el-button style="margin-top: 5vw">
+            <span>♥</span>
+            心动模式</el-button
+          >
+        </div>
+      </div>
+      <van-tabs v-model="active">
+        <van-tab title="创建歌单" title-style="font-size:4vw;font-weight:800">
+          <div class="create">
+            <div class="songs">
+              <p class="left">
+                <span>创建歌单</span>
+              </p>
+              <div class="right">
+                <span>+</span>
+                <img
+                  src="@/assets/mine/tubiao/gengduo.png"
+                  sty1e="width:3vw;height:3vw;display:inline-block"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="download">
+              <p><img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" /></p>
+              <span>导入外部歌单</span>
             </div>
           </div>
-         
-        </div>
-      </van-tab>
-      <van-tab title="收藏歌单"  title-style="font-size:4vw;font-weight:800">
-      <div class="collect">
+          <div class="create">
+            <div class="songs">
+              <p class="left">
+                <span>收藏歌单</span>
+              </p>
+              <div class="right">
+                <img
+                  src="@/assets/mine/tubiao/gengduo.png"
+                  sty1e="width:3vw;height:3vw;display:inline-block"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </van-tab>
+        <van-tab title="收藏歌单" title-style="font-size:4vw;font-weight:800">
+          <div class="collect">
             <p>暂无收藏的歌单</p>
           </div>
-
-      </van-tab>
-    </van-tabs>
+        </van-tab>
+      </van-tabs>
+    </div>
   </div>
 </template>
 
 <script>
+import { getuid } from "@/utils/tools.js";
 import topbar from "@/views/Topbar";
+
+import { mineApi, likeMusicApi } from "@/api/mine.js";
 export default {
   data() {
     return {
+      count: "0",
+      chara: "请登录",
+      info: {},
       active: 2,
+      photo: "../assets/mine/tubiao/denglu.png",
       Img: [
         {
           img: require("../assets/mine/tubiao/ttpodicon.png"),
@@ -114,6 +121,28 @@ export default {
       currentDate: new Date(),
     };
   },
+  async created() {
+    if (getuid()) {
+      const resinfo = await mineApi({ uid: getuid() });
+      this.info = resinfo;
+      this.photo = this.info.profile.avatarUrl;
+      this.chara = this.info.profile.nickname;
+      const likeMusicList = await likeMusicApi({ uid: getuid() });
+      // console.log(likeMusicList.ids.length);
+      this.count = likeMusicList.ids.length;
+    }
+  },
+  methods: {
+    picture() {
+      if (getuid()) {
+        this.$router.push({ name: "UserDetail" });
+        const info_i = mineApi();
+        console.log(info_i);
+      } else {
+        this.$router.push({ name: "Login" });
+      }
+    },
+  },
   components: {
     topbar,
   },
@@ -127,11 +156,17 @@ body {
   height: 100%;
   background: #f7f7f7;
 }
-.mine {
-  /* padding: 6vw; */
+.login_l {
+  padding: 0 6vw;
 }
 .login {
   height: 10vw;
+  display: flex;
+  justify-content: space-between;
+}
+.icon {
+  width: 12vw;
+  border-radius: 12vw;
 }
 .list {
   display: flex;
@@ -207,8 +242,8 @@ body {
 }
 .download {
   height: 25vw;
-  background:skyblue;
-  margin-bottom:5vw;
+  background: skyblue;
+  margin-bottom: 5vw;
 }
 .download p {
   display: inline-block;
@@ -221,7 +256,7 @@ body {
 .download span {
   line-height: 10vw;
 }
-.collect span{
-   font-size:12px;
+.collect span {
+  font-size: 12px;
 }
 </style>
