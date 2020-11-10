@@ -10,6 +10,7 @@
         /></span>
         <input
           type="text"
+          v-model="txt"
           style="
             display: inline-blobk;
             width: 80%;
@@ -55,15 +56,38 @@
     </div>
     <div class="under">
       <el-row :gutter="20">
-  <el-col :span="12"><div style="height:15vw;margin-top:5vw;" class="grid-content bg-purple"></div></el-col>
-</el-row>
+        <el-col :span="12"
+          ><div
+            style="height: 15vw; margin-top: 5vw"
+            class="grid-content bg-purple"
+          ></div
+        ></el-col>
+      </el-row>
     </div>
   </div>
 </template>
 <script>
+import { searchApi } from "@/api/search.js";
 export default {
   data() {
-    return { isLoad: false };
+    return {
+      isLoad: false,
+      txt: "",
+      word:'',
+    };
+  },
+  // async created(){
+    watch:{
+    txt(v){
+      console.log(v);
+      this.word = v;
+      if (this.word.length != 0) {
+        const res =searchApi({ 'keywords': this.word })
+        console.log(res.result)
+        //console.log(res.result);
+      }
+    }
+  // } 
   },
   methods: {
     clickHandle() {
@@ -87,32 +111,30 @@ export default {
 .count {
   flex-direction: column;
 }
- .el-row {
-    margin-bottom: 20px;
-    /* :last-child {
+.el-row {
+  margin-bottom: 20px;
+  /* :last-child {
       margin-bottom: 0;
     } */
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-
-
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
 </style>

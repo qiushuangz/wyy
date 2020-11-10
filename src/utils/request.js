@@ -18,7 +18,7 @@ const instance = axios.create({
 //    1. 添加全局loading
 //    1. 在请求头添加token
 instance.interceptors.request.use(
-  function(config) {
+  function (config) {
     NProgress.start();
     // config.headers.cookie = "1355";
     // Do something before request is sent
@@ -26,7 +26,7 @@ instance.interceptors.request.use(
     // config.headers.authorization = "Bearer " + getToken(); // 在请求头中添加token
     return config;
   },
-  function(error) {
+  function (error) {
     // Do something with request error
     return Promise.reject(error);
   }
@@ -37,13 +37,13 @@ instance.interceptors.request.use(
 //  1. 清除loading
 //  2. 错误异常处理
 instance.interceptors.response.use(
-  function(response) {
+  function (response) {
     NProgress.done();
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response.data;
   },
-  function(error) {
+  function (error) {
     NProgress.done();
     console.dir(error);
     if (error.message && error.message.indexOf("timeout") > -1) {
