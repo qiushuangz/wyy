@@ -21,7 +21,7 @@
       </div>
       <div class="heart">
         <div class="music">
-          <img src="@/assets/mine/tubiao/woxihuan.png" alt="" />
+          <div><img src="@/assets/mine/tubiao/woxihuan.png" alt="" /></div>
           <div class="like">
             <p>我喜欢的音乐</p>
             <p>{{ count }}首</p>

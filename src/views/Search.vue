@@ -4,12 +4,14 @@
       <div class="search_s">
         <span>
           <img
+            @click="last"
             src="../assets/mine/tubiao/zuojiantou.png"
             alt=""
             style="width: 6vw; height: 6vw"
         /></span>
         <input
           type="text"
+          v-model="txt"
           style="
             display: inline-blobk;
             width: 80%;
@@ -17,22 +19,41 @@
             border: none;
             outline: none;
             border-bottom: solid 1px black;
+            position: relative;
           "
         />
+        <span class="el-icon-close" @click="cleanHandle"></span>
+        <ul style="position: absolute; height: 125vw; overflow: hidden">
+          <li
+            v-for="item in songs"
+            :key="item.id"
+            style="
+              height: 8vw;
+              line-height: 8vw;
+              border-bottom: solid 1px #333;
+              padding: 3vw;
+              background: white;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            "
+          >
+            <van-icon name="search" style="padding: 0 2vw" />
+            {{ item.name }}
+          </li>
+        </ul>
       </div>
-      <div class="history">
+      <div class="history" style="">
         <div class="history_h">
-          <span>历史</span>
-          <span>历史歌曲</span>
+          <span>历史</span> <span>历史歌曲</span
+          ><span style="margin-left: 55vw"
+            ><img
+              src="../assets/search/garbage.png"
+              style="width: 6vw; height: 6vw"
+              alt=""
+          /></span>
         </div>
-        <span
-          ><img
-            src="../assets/search/garbage.png"
-            style="width: 6vw; height: 6vw"
-            alt=""
-        /></span>
       </div>
-
       <div class="hot">
         <p>热搜榜</p>
         <p>
@@ -44,30 +65,83 @@
           播放全部
         </p>
       </div>
-      <div class="count">
-        <div class="songs">
-          <li></li>
+      <div class="count" style="height: 80vw; overflow: hidden">
+        <div class="songs" style="display: inline-block">
+          <span
+            v-for="(item, index) in hotDetail"
+            :key="item.id"
+            style="
+              width: 40vw;
+              display: inline-block;
+              line-height: 8vw;
+              margin-left: 4vw;
+            "
+            >{{ index + 1 }}{{ item.searchWord }}</span
+          >
         </div>
-        <el-button type="primary" :loading="isLoad" @click="clickHandle"
-          >加载中</el-button
-        >
       </div>
+      <el-button type="primary" :loading="isLoad" @click="clickHandle"
+        >加载中</el-button
+      >
     </div>
+
     <div class="under">
       <el-row :gutter="20">
-  <el-col :span="12"><div style="height:15vw;margin-top:5vw;" class="grid-content bg-purple"></div></el-col>
-</el-row>
+        <el-col :span="12"
+          ><div
+            style="height: 15vw; margin-top: 5vw"
+            class="grid-content bg-purple"
+          ></div
+        ></el-col>
+      </el-row>
     </div>
   </div>
 </template>
 <script>
+import { searchApi, hotDetailApi } from "@/api/search.js";
 export default {
   data() {
-    return { isLoad: false };
+    return {
+      isLoad: false,
+      txt: "",
+      word: "",
+      songs: "",
+      isShow: false,
+      hotDetail: [],
+    };
+  },
+  watch: {
+    async txt(v) {
+      console.log(v);
+      this.word = v;
+      if (this.word.length != 0) {
+        const res = await searchApi({ keywords: this.word });
+        this.songs = res.result.songs;
+        //console.log(res.result);
+      } else {
+        this.songs = "";
+      }
+    },
+  },
+  async created() {
+    let res = await hotDetailApi();
+    // console.log(res.data)
+    this.hotDetail = res.data;
+    //  console.log(hot);
   },
   methods: {
     clickHandle() {
       this.isLoad = true;
+    },
+    last() {
+      this.$router.push({
+        name: "Mine",
+      });
+    },
+    cleanHandle() {
+      this.txt = "";
+      this.songs = "";
+      console.log(1);
     },
   },
 };
@@ -76,43 +150,42 @@ export default {
 .search {
   padding: 0 6vw;
 }
-.history {
-  display: flex;
-  justify-content: space-between;
-}
+/* .history {
+  /* display: flex;
+  justify-content: space-between; */
+/* } */
 .hot {
   display: flex;
   justify-content: space-between;
 }
-.count {
+
+/* .count {
   flex-direction: column;
-}
- .el-row {
-    margin-bottom: 20px;
-    /* :last-child {
+} */
+/* .el-row {
+  margin-bottom: 20px;
+  /* :last-child {
       margin-bottom: 0;
     } */
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-
-
+/* } */
+/* .el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+/* } */
 </style>

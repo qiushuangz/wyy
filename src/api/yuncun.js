@@ -17,7 +17,7 @@ export function loginoutAPI() {
 }
 //获取--用户关注动态
 export function gettrendsAPI(params) {
-  return get("/user/event", params);
+  return get("/event?pagesize=50", params);
 }
 
 //获取--热评墙
