@@ -6,7 +6,7 @@
     >
       <div class="top">
         <div class="top_t">
-          <van-icon name="arrow-left" @click-left="last" />
+          <van-icon name="arrow-left" @click="last" />
           <van-icon class="el-icon-share" size="8vw" />
         </div>
         <img :src="photo" style="padding: 6vw" class="icon" alt="" />
@@ -87,15 +87,16 @@
 
             <div class="right" style="margin-top: 8vw">
               <span style="margin-top: 8vw">{{ chara }}</span>
-              <span></span>
+
               <span style="margin-top: 8vw; font-size: 4vw" class="share">
                 分享单曲:
               </span>
+              <span>{{ item.showTime }}</span>
               <div class="moveList">
                 <p>{{ item.msg }}</p>
-                <div class="music">
+                <div class="music1">
                   <div>
-                    <img :src="item.song.album.picUrl" alt="" />
+                    <img :src="item.picUrl" alt="" />
                   </div>
                   <div class="like">
                     <p>{{ item.song.name }}</p>
@@ -177,12 +178,13 @@ export default {
     for (let i in res.events) {
       this.reEvent[i] = JSON.parse(res.events[i].json);
       this.reEvent[i].showTime = res.events[i].showTime;
+      this.reEvent[i].picUrl = this.reEvent[i].song.album.picUrl;
     }
-    console.log(this.reEvent[0].song);
+    console.log(this.reEvent[0].song.album.picUrl);
   },
   methods: {
     last() {
-      this.$router.push({
+     this.$router.push({
         name: "Mine",
       });
     },
@@ -195,7 +197,21 @@ export default {
   margin-bottom: 2vw;
   padding-left: 6vw;
 }
-
+.left p {
+  padding-left: 6vw;
+}
+.music1 {
+  display: flex;
+  margin-bottom: 2vw;
+}
+.music1 div img {
+  /* margin-left: 6vw; */
+  margin-right: 6vw;
+  width: 13vw;
+  height: 13vw;
+  display: inline-block;
+  border-radius: 2vw;
+}
 .music div img {
   /* margin-left: 6vw; */
   margin-right: 6vw;
@@ -220,19 +236,20 @@ export default {
 }
 .up {
   width: 100%;
-  height: 100%;
+  height: 80%;
   background-size: 100%, 100%;
 }
 .top_t {
   display: flex;
   justify-content: space-between;
-  padding: 6vw;
+  padding: 0 6vw;
+  padding-top: 6vw;
   font-size: 8vw;
 }
 .content {
   display: flex;
   justify-content: space-between;
-  padding: 6vw;
+  padding-bottom: 10vw;
 }
 .bg {
   /* opacity: 0.2; */
