@@ -73,21 +73,21 @@ export default {
     return {
       isLoad: false,
       txt: "",
-      word:'',
+      word: "",
     };
   },
   // async created(){
-    watch:{
-    txt(v){
-      console.log(v);
+  watch: {
+    txt(v) { 
+ console.log(v);
       this.word = v;
       if (this.word.length != 0) {
-        const res =searchApi({ 'keywords': this.word })
-        console.log(res.result)
+        const res =await searchApi({ keywords: this.word });
+        console.log(res);
         //console.log(res.result);
       }
-    }
-  // } 
+    },
+    // }
   },
   methods: {
     clickHandle() {
