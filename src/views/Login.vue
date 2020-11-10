@@ -108,7 +108,6 @@ export default {
             console.log(res);
             // 判断手机号密码是否正确
             if (res.code == 200) {
-              console.log(res.account.id);
               // 判断他是否已经登录
               if (localStorage.getItem("uid") == res.account.id) {
                 Notify("您已经登录,不能重复登录");

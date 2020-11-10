@@ -91,8 +91,9 @@
               <span style="margin-top: 8vw; font-size: 4vw" class="share">
                 分享单曲:
               </span>
-              <span>{{ item.showTime }}</span>
+             
               <div class="moveList">
+                 <span>{{ item.showTime | moment }} </span>
                 <p>{{ item.msg }}</p>
                 <div class="music1">
                   <div>
@@ -285,5 +286,8 @@ export default {
 }
 .share {
   color: #333;
+}
+.moveList span{
+font-size:2vw;
 }
 </style>
