@@ -54,5 +54,7 @@ export default {
 <style scoped>
 .icon_top:hover {
   color: #ec4141;
+  font-weight: 800;
+  font-size: 1.2rem;
 }
 </style>
