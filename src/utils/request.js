@@ -5,7 +5,7 @@ import { serverUrl, removeToken } from "./tools";
 // import Vue from "vue";
 NProgress.configure({ showSpinner: false });
 const instance = axios.create({
-  timeout: 5000, // 请求超时时间
+  timeout: 10000, // 请求超时时间
   baseURL: serverUrl, // 请求的基础地址
 });
 // axios.defaults.withCredentials = true;

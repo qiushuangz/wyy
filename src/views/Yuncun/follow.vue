@@ -52,17 +52,6 @@ export default {
         this.list_all[i].avatarUrl = res.event[i].user.avatarUrl;
         this.list_all[i].showTime = res.event[i].showTime;
         this.list_all[i].type = res.event[i].type;
-        // if (res.event[i].type == 18) {
-        //   this.list_all[i].type = "分享单曲";
-        // } else if (res.event[i].type == 41 || res.event[i].type == 42) {
-        //   this.list_all[i].type = "分享视频";
-        // } else if (res.event[i].type == 39) {
-        //   this.list_all[i].type = "发布视频";
-        // } else {
-        //   // this.list_all[i].type = "发布";
-        //   this.list_all.splice(i, 1);
-        // }
-        // console.log(this.list_all[i].type);
       }
       console.log(this.list_all);
       for (let j in this.list_all) {
@@ -133,8 +122,9 @@ export default {
 
 .mid {
   font-size: 4vw;
-  margin-left: 13vw;
   line-height: 1.5;
+  margin: 2vw 0;
+  margin-left: 13vw;
 }
 .bottom {
   margin-left: 13vw;
