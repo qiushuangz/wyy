@@ -66,6 +66,11 @@ const routes = [
     name: "Player",
     component: () => import("../views/Player.vue"),
   },
+  {
+    path: "/comment",
+    name: "comment",
+    component: () => import("../views/Player/comment.vue"),
+  },
 ];
 
 const router = new VueRouter({
