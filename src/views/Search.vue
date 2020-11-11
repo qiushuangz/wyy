@@ -3,12 +3,23 @@
     <div class="content">
       <div class="search_s">
         <span>
-          <img
+          <van-icon
+            name="arrow-left"
+            @click="last"
+            style="width: 6vw; height: 6vw"
+          />
+          <!-- <img
             @click="last"
             src="../assets/mine/tubiao/zuojiantou.png"
             alt=""
-            style="width: 6vw; height: 6vw"
-        /></span>
+            style="width: 6vw; height: 6vw
+            position:absolute;
+            top:5vw;
+            left:2vw;
+            
+            "
+        />-->
+        </span>
         <input
           type="text"
           v-model="txt"
@@ -22,7 +33,12 @@
             position: relative;
           "
         />
-        <span class="el-icon-close" @click="cleanHandle"></span>
+        <van-icon
+          name="cross"
+          @click="cleanHandle"
+          style="width: 6vw; height: 6vw"
+        />
+        <!-- <span class="el-icon-close" "></span> -->
         <ul style="position: absolute; height: 125vw; overflow: hidden">
           <li
             v-for="item in songs"
@@ -65,7 +81,7 @@
           播放全部
         </p>
       </div>
-      <div class="count" style="height: 80vw; overflow: hidden">
+      <div class="count">
         <div class="songs" style="display: inline-block">
           <span
             v-for="(item, index) in hotDetail"
@@ -80,11 +96,14 @@
           >
         </div>
       </div>
-      <el-button type="primary" :loading="isLoad" @click="clickHandle"
-        >加载中</el-button
+      <el-button
+        type="primary"
+        :loading="isLoad"
+        @click="clickHandle"
+        v-show="isShow"
+        >加载更多</el-button
       >
     </div>
-
     <div class="under">
       <el-row :gutter="20">
         <el-col :span="12"
@@ -106,8 +125,10 @@ export default {
       txt: "",
       word: "",
       songs: "",
-      isShow: false,
+      isShow: true,
       hotDetail: [],
+      hotDetailAll: [],
+      newHotDetail: [],
     };
   },
   watch: {
@@ -126,12 +147,23 @@ export default {
   async created() {
     let res = await hotDetailApi();
     // console.log(res.data)
-    this.hotDetail = res.data;
+    this.hotDetail = res.data.splice(0, 10);
+    console.log(this.hotDetail);
+    this.hotDetailAll = res.data.splice(0, 10);
+    console.log(this.hotDetailAll);
+
     //  console.log(hot);
   },
   methods: {
     clickHandle() {
       this.isLoad = true;
+      console.log(this.hotDetail);
+      console.log(this.hotDetailAll);
+
+      this.hotDetail = this.hotDetail.concat(this.hotDetailAll);
+      console.log(this.newHotDetail);
+      this.isLoad = false;
+      this.isShow = false;
     },
     last() {
       this.$router.push({

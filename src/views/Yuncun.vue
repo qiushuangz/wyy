@@ -14,6 +14,16 @@
         <el-button type="primary" @click="login">登录</el-button>
         <el-button type="primary" @click="check_status">获取个人信息</el-button>
         <el-button type="primary" @click="login_out">登出</el-button>
+        <el-button
+          class="song"
+          :to="{ name: 'Player', params: { id: 347230 } }"
+        >
+          0000
+        </el-button>
+        <!-- <router-link :to="{ name:"Player", query:{id: 347230 }}">999 <router-link> -->
+        <router-link :to="{ name: 'Player', query: { id: 347230 } }"
+          >我要去听歌</router-link
+        >
       </van-tab>
     </van-tabs>
   </div>

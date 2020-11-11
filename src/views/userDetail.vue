@@ -91,9 +91,9 @@
               <span style="margin-top: 8vw; font-size: 4vw" class="share">
                 分享单曲:
               </span>
-             
+
               <div class="moveList">
-                 <span>{{ item.showTime | moment }} </span>
+                <span>{{ item.showTime | moment }} </span>
                 <p>{{ item.msg }}</p>
                 <div class="music1">
                   <div>
@@ -179,13 +179,14 @@ export default {
     for (let i in res.events) {
       this.reEvent[i] = JSON.parse(res.events[i].json);
       this.reEvent[i].showTime = res.events[i].showTime;
+      console.log(this.reEvent);
       this.reEvent[i].picUrl = this.reEvent[i].song.album.picUrl;
     }
     console.log(this.reEvent[0].song.album.picUrl);
   },
   methods: {
     last() {
-     this.$router.push({
+      this.$router.push({
         name: "Mine",
       });
     },
@@ -287,7 +288,7 @@ export default {
 .share {
   color: #333;
 }
-.moveList span{
-font-size:2vw;
+.moveList span {
+  font-size: 2vw;
 }
 </style>

@@ -3,9 +3,9 @@
     <topbar></topbar>
     <div class="login_l">
       <div class="login" @click="picture">
-        <div class="left">
+        <div class="left" style="display: flex; align-item: center">
           <img :src="photo" class="icon" size="10vw" />
-          <span>{{ chara }}</span>
+          <span style="display:inline-block;line-height:10vw;">{{ chara }}</span>
         </div>
         <div class="right">
           <span>&gt;</span>
