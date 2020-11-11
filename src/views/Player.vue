@@ -6,7 +6,9 @@
     ></div>
     <div class="top">
       <div class="before">
-        <i class="el-icon-back"></i>
+        <!-- <router-link :to="{ name: 'Player', query: { id: 347230 } }"> -->
+        <i class="el-icon-back" @click="back"></i>
+        <!-- </router-link> -->
       </div>
       <div class="song">
         <div class="song_name">{{ now_song.name }}</div>
@@ -24,21 +26,23 @@
     <div class="bootm">
       <div class="bottom_1">
         <van-icon name="like-o" size="2em" />
-        <a :href="palyUrl" download>
-          <van-icon name="down" size="2em" />
-        </a>
+        <a :href="now_song.palyUrl" target="_blank" class="download" download>
+          <van-icon name="down" size="2em"
+        /></a>
+
         <van-icon name="comment-o" size="2em" />
       </div>
       <!-- @timeupdate="onTimeupdate"
           @loadedmetadata="onLoadedmetadata" -->
       <div class="bottom_2">
         <audio
-          :src="now_song.palyUrl"
+          :src="now_song.playurl"
           ref="audio"
           @pause="onPause"
           @play="onPlay"
           @timeupdate="onTimeupdate"
           @loadedmetadata="onLoadedmetadata"
+          autoplay
         ></audio>
         <span type="info">{{ audio.currentTime | formatSecond }}</span>
         <!-- 进度条ui -->
@@ -68,7 +72,7 @@
 </template>
 
 <script>
-import { getsongAPI } from "@/api/player";
+import { getsongAPI, geturlAPI } from "@/api/player";
 // import vueaudio from "@/views/Player/VueAudio"
 // 将整数转换成 时：分：秒的格式
 function realFormatSecond(second) {
@@ -91,14 +95,11 @@ function realFormatSecond(second) {
   }
 }
 export default {
+  name: "MuPlayer",
   data() {
     return {
       imgbig: require("../assets/player/cangpian.jpg"),
-      now_song: {
-        name: "",
-        palyUrl:
-          "https://audio04.dmhmusic.com/71_53_T10056408996_128_4_1_0_sdk-cpm/cn/0412/M00/0D/C3/ChAKEV9CEbWAH86LAEw-ihryd_Y167.mp3?xcode=231fe742af7cdf72742c5bf4562b241b48a9bff",
-      },
+      now_song: {},
       songid: 347230,
       sliderTime: 0,
       audio: {
@@ -112,19 +113,30 @@ export default {
     };
   },
   async created() {
+    this.songid = this.$route.query.id;
+    console.log(this.songid);
     let res = await getsongAPI({ ids: this.songid });
-    console.log(res);
-    this.now_song.name = res.songs[0].name;
-    this.now_song.picUrl = res.songs[0].al.picUrl;
-    this.now_song.singer = res.songs[0].ar[0].name;
+    let res_url = await geturlAPI({ id: this.songid });
+    const d = {};
+    d.playurl = res_url.data[0].url;
+    d.name = res.songs[0].name;
+    d.picUrl = res.songs[0].al.picUrl;
+    d.singer = res.songs[0].ar[0].name;
+    this.now_song = d;
+    // this.$refs.audio.src = this.now_song.playurl;
     console.log(this.now_song);
   },
-  // components: {
-  //   vueaudio
-  // },
+  mounted() {
+    // 播放音频
+    // this.startPlayOrPause();
+  },
   methods: {
+    back() {
+      this.$router.go(-1); //返回上一层
+    },
     // 控制音频的播放与暂停
     startPlayOrPause() {
+      console.log("ok");
       console.log(this.audio.playing);
       return this.audio.playing ? this.pause() : this.play();
     },
@@ -203,7 +215,7 @@ export default {
   height: 100%;
   width: 100%;
   background-size: 100% 100%;
-  filter: grayscale(10%) blur(20px) contrast(20%) brightness(90%);
+  filter: grayscale(10%) blur(10px) contrast(20%) brightness(90%);
   z-index: -9;
   position: absolute;
 }
@@ -296,6 +308,9 @@ export default {
 .song_user {
   font-size: 3.5vw;
   color: #afaaa3;
+}
+.download:visited {
+  color: white;
 }
 /*
 .mid .mid_big .mid_s{
