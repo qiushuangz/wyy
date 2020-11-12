@@ -66,6 +66,11 @@ const routes = [
     name: "Player",
     component: () => import("../views/Player.vue"),
   },
+  {
+    path: "/detaillist",
+    name: "detaillist",
+    component: () => import("../views/detailList.vue"),
+  },
 ];
 
 const router = new VueRouter({

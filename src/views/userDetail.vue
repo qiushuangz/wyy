@@ -148,23 +148,23 @@ export default {
     // if (getuid()) {
     const resinfo = await mineApi({ uid: getuid() });
     //console.log(resinfo);
-    this.info = resinfo;
-    this.photo = this.info.profile.avatarUrl;
-    this.chara = this.info.profile.nickname;
+    this.info = resinfo;//我的信息
+    this.photo = this.info.profile.avatarUrl;//头像
+    this.chara = this.info.profile.nickname;//头像名字
     console.log(this.info);
     //  this.info.listenSongs = resinfo.listenSongs;
     this.listensongs = this.info.listenSongs;
     // console.log(this.info.listenSongs);
     this.backgroundUrl = this.info.profile.backgroundUrl;
     const likeMusicList = await likeMusicApi({ uid: getuid() });
-    // console.log(likeMusicList.ids.length);
+     console.log(likeMusicList.ids.length);
     this.count = likeMusicList.ids.length;
+
+
+    
     const userSongCount = await userSongCountApi({ uid: getuid() });
     this.array = userSongCount.playlist;
-    // console.log(this.array);
-    // console.log(userSongCount);
     this.likeList = this.array.splice(0, 1);
-    //console.log(this.array);
     this.array.forEach((item) => {
       if (item.userId == getuid()) {
         this.createArray.push(item);
@@ -174,6 +174,12 @@ export default {
     });
     this.list = this.createArray.length;
     this.addLength = this.addArray.length;
+
+
+
+
+
+
     let res = await eventApi({ uid: getuid() });
     console.log(res.events);
     for (let i in res.events) {

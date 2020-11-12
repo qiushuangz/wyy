@@ -2,13 +2,18 @@
   <div class="mine">
     <topbar></topbar>
     <div class="login_l">
-      <div class="login" @click="picture">
+      <div class="login" @click="picture" style="padding: 3vw 0">
         <div class="left" style="display: flex; align-item: center">
           <img :src="photo" class="icon" size="10vw" />
-          <span style="display:inline-block;line-height:10vw;">{{ chara }}</span>
+          <span
+            style="display: inline-block; line-height: 10vw; margin-left: 4vw"
+            >{{ chara }}</span
+          >
         </div>
         <div class="right">
-          <span>&gt;</span>
+          <span style="font-size: 6vw; margin-top: -3vw; display: inline-block"
+            >&gt;</span
+          >
         </div>
       </div>
       <div class="list">
@@ -20,79 +25,177 @@
         </dl>
       </div>
       <div class="heart">
-        <div class="music">
-          <div><img src="@/assets/mine/tubiao/woxihuan.png" alt="" /></div>
+        <div class="music" style="display: flex">
+          <div>
+            <img
+              src="@/assets/mine/tubiao/woxihuan.png"
+              alt=""
+              style="margin: 6vw"
+            />
+          </div>
           <div class="like">
             <p>我喜欢的音乐</p>
             <p>{{ count }}首</p>
           </div>
         </div>
         <div class="move">
-          <el-button style="margin-top: 5vw">
+          <el-button
+            @click="heartMove"
+            size="small"
+            style="margin-top: 6vw; margin-right: 5vw"
+          >
             <span>♥</span>
             心动模式</el-button
           >
         </div>
       </div>
-      <van-tabs v-model="active">
-        <van-tab title="创建歌单" title-style="font-size:4vw;font-weight:800">
+      <van-tabs v-model="active" style="">
+        <van-tab
+          title="创建歌单"
+          title-style="font-size:4vw;font-weight:800;background:#faf8f8;"
+        >
           <div class="create">
-            <div class="songs">
-              <p class="left">
-                <span>创建歌单</span>
-              </p>
-              <div class="right">
-                <span>+</span>
-                <img
-                  src="@/assets/mine/tubiao/gengduo.png"
-                  sty1e="width:3vw;height:3vw;display:inline-block"
-                  alt=""
-                />
+            <div
+              class="songs"
+              style="background: white; border-radius: 3vw; padding: 0 3vw"
+            >
+              <div style="display: flex; justify-content: space-between">
+                <p class="left">
+                  <span>创建歌单</span>
+                </p>
+                <div class="right">
+                  <span>+</span>
+                  <img
+                    src="@/assets/mine/tubiao/gengduo.png"
+                    sty1e="width:3vw;height:3vw;display:inline-block"
+                    alt=""
+                  />
+                </div>
               </div>
-            </div>
-            <div class="download">
-              <p><img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" /></p>
-              <span>导入外部歌单</span>
-            </div>
-          </div>
-          <div class="create">
-            <div class="songs">
-              <p class="left">
-                <span>收藏歌单</span>
-              </p>
-              <div class="right">
-                <img
-                  src="@/assets/mine/tubiao/gengduo.png"
-                  sty1e="width:3vw;height:3vw;display:inline-block"
-                  alt=""
-                />
+
+              <div v-for="item in createArray" :key="item.id">
+                <router-link
+                  :to="{
+                    name: 'detaillist',
+                    query: {
+                      id: item.id,
+                      coverImgUrl: item.coverImgUrl,
+                      name: item.name,
+                    },
+                  }"
+                >
+                  <div class="music_m">
+                    <div>
+                      <img :src="item.coverImgUrl" alt="" />
+                    </div>
+                    <div class="like" style="color: black;">
+                      <p>{{ item.name }}</p>
+                      <p class="small">
+                        {{ item.trackCount }}首,播放{{ item.playCount }}次
+                      </p>
+                    </div>
+                  </div>
+                </router-link>
+              </div>
+              <div class="download">
+                <p><img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" /></p>
+                <span>导入外部歌单</span>
               </div>
             </div>
           </div>
         </van-tab>
-        <van-tab title="收藏歌单" title-style="font-size:4vw;font-weight:800">
+        <van-tab
+          title="收藏歌单"
+          title-style="font-size:4vw;font-weight:800;background:#faf8f8"
+        >
           <div class="collect">
-            <p>暂无收藏的歌单</p>
+            <!-- <p>暂无收藏的歌单</p> -->
+            <div class="create">
+              <div
+                class="songs"
+                style="background: white; border-radius: 3vw; padding: 0 3vw"
+              >
+                <div style="display: flex; justify-content: space-between">
+                  <p class="left">
+                    <span>收藏歌单</span>
+                  </p>
+                  <div class="right">
+                    <img
+                      src="@/assets/mine/tubiao/gengduo.png"
+                      sty1e="width:3vw;height:3vw;display:inline-block"
+                      alt=""
+                    />
+                  </div>
+                </div>
+
+                <div v-for="item in addArray" :key="item.id">
+                  <router-link
+                    :to="{
+                      name: 'detaillist',
+                      query: {
+                        id: item.id,
+                        coverImgUrl: item.coverImgUrl,
+                        name: item.name,
+                      },
+                    }"
+                  >
+                    <div class="music_m">
+                      <div>
+                        <img :src="item.coverImgUrl" alt="" />
+                      </div>
+                      <div class="like" style="color: black">
+                        <p>{{ item.name }}</p>
+                        <p class="small">
+                          {{ item.trackCount }}首,by{{ item.creator.nickname }}
+                        </p>
+                      </div>
+                    </div>
+                  </router-link>
+                </div>
+                <div class="download">
+                  <p>
+                    <img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" />
+                  </p>
+                  <span>导入外部歌单</span>
+                </div>
+              </div>
+            </div>
           </div>
         </van-tab>
       </van-tabs>
     </div>
   </div>
 </template>
-
 <script>
 import { getuid } from "@/utils/tools.js";
 import topbar from "@/views/Topbar";
 
+import { userSongCountApi, eventApi } from "@/api/userDetail.js";
 import { mineApi, likeMusicApi } from "@/api/mine.js";
 export default {
   data() {
     return {
+      array: [],
+      createArray: [],
+      addArray: [],
+      addLength: "0",
+      list: "0", //歌单
       count: "0",
+      likeList: [],
+      reEvent: [
+        {
+          name: "",
+          song: "",
+          picUrl: "",
+          album: "",
+        },
+      ],
       chara: "请登录",
       info: {},
       active: 2,
+      // likeList: [],
       photo: "../assets/mine/tubiao/denglu.png",
+      play: [],
       Img: [
         {
           img: require("../assets/mine/tubiao/ttpodicon.png"),
@@ -128,8 +231,36 @@ export default {
       this.photo = this.info.profile.avatarUrl;
       this.chara = this.info.profile.nickname;
       const likeMusicList = await likeMusicApi({ uid: getuid() });
-      // console.log(likeMusicList.ids.length);
+      console.log(likeMusicList.ids);
       this.count = likeMusicList.ids.length;
+      this.play = this.play.concat(likeMusicList.ids); //心动模式歌曲id数组.
+      //   console.log(this.play);
+      ///////////////////
+      const userSongCount = await userSongCountApi({ uid: getuid() });
+      this.array = userSongCount.playlist;
+      this.likeList = this.array.splice(0, 1);
+      this.array.forEach((item) => {
+        if (item.userId == getuid()) {
+          this.createArray.push(item);
+        } else {
+          this.addArray.push(item);
+        }
+      });
+      this.list = this.createArray.length;
+      this.addLength = this.addArray.length;
+      console.log(this.addArray);
+      /////////
+
+      let res = await eventApi({ uid: getuid() });
+      // console.log(res.events);
+      for (let i in res.events) {
+        this.reEvent[i] = JSON.parse(res.events[i].json);
+        this.reEvent[i].showTime = res.events[i].showTime;
+        // console.log(this.reEvent);
+        this.reEvent[i].picUrl = this.reEvent[i].song.album.picUrl;
+      }
+
+      // console.log(play.playlist[0].id);
     }
   },
   methods: {
@@ -142,6 +273,16 @@ export default {
         this.$router.push({ name: "Login" });
       }
     },
+    // detailList(v) {
+    //   this.$router.push({
+    //     name: "detaillist",
+    //     query: {
+    //       id: v.id,
+    //       coverImgUrl: v.coverImgUrl,
+    //       name: 1,
+    //     },
+    //   });
+    // },
   },
   components: {
     topbar,
@@ -154,10 +295,11 @@ html,
 body {
   width: 100%;
   height: 100%;
-  background: #f7f7f7;
 }
+
 .login_l {
   padding: 0 6vw;
+  background: #faf8f8;
 }
 .login {
   height: 10vw;
@@ -171,6 +313,8 @@ body {
 .list {
   display: flex;
   flex-wrap: wrap;
+  background: white;
+  border-radius: 3vw;
 }
 .list dl {
   display: flex;
@@ -188,7 +332,7 @@ body {
 }
 .list dl img {
   width: 12vw;
-  margin-left: 3vw;
+  margin-left: 7vw;
 }
 .login p {
   display: inline-block;
@@ -198,7 +342,8 @@ body {
   margin: 0;
 }
 .list dl dd {
-  text-indent: -16vw;
+  text-indent: -11vw;
+  font-size: 3vw;
 }
 .heart {
   display: flex;
@@ -207,10 +352,11 @@ body {
   /* height:20vw; */
   margin-top: 3vw;
   background: #ffffff;
+  border-radius: 3vw;
 }
 .music img {
-  width: 8vw;
-  height: 8vw;
+  width: 6vw;
+  height: 6vw;
   display: inline-block;
 }
 .like {
@@ -229,8 +375,8 @@ body {
   height: 3vw;
 }
 .songs {
-  display: flex;
-  justify-content: space-between;
+  /* display: flex;
+  justify-content: space-between; */
 }
 .songs img {
   display: inline-block;
@@ -241,9 +387,10 @@ body {
   margin-top: 4vw;
 }
 .download {
-  height: 25vw;
-  background: skyblue;
+  /* height: 25vw; */
+  background: white;
   margin-bottom: 5vw;
+  border-radius: 3vw;
 }
 .download p {
   display: inline-block;
@@ -258,5 +405,24 @@ body {
 }
 .collect span {
   font-size: 12px;
+}
+.music_m {
+  display: flex;
+  margin-bottom: 2vw;
+  /* padding-left: 6vw; */
+}
+.music_m div img {
+  /* margin-left: 6vw; */
+  margin-right: 6vw;
+  width: 13vw;
+  height: 13vw;
+  display: inline-block;
+  border-radius: 2vw;
+}
+.music_m p:first-child {
+  margin: 0;
+}
+.small {
+  font-size: 2vw;
 }
 </style>
