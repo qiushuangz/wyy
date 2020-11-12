@@ -1,6 +1,8 @@
 <template>
   <div class="mine">
-    <topbar style="position:fixed;top:0;left:0;width:100%;z-index:1000;"></topbar>
+    <topbar
+      style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000"
+    ></topbar>
     <div class="login_l">
       <div class="login" @click="picture" style="padding: 3vw 0">
         <div class="left" style="display: flex; align-item: center">
@@ -30,21 +32,21 @@
         :to="{
           name: 'detaillist',
           query: {
-            id: likeList[0].id,
-            coverImgUrl: likeList[0].coverImgUrl,
-            name: likeList[0].name,
+            id: likeList.id,
+            coverImgUrl: likeList.coverImgUrl,
+            name: likeList.name,
           },
         }"
       >
         <div class="heart">
           <div class="music" style="display: flex">
             <div>
-              <img :src="likeList[0].coverImgUrl" alt="" style="margin: 6vw" />
+              <img :src="likeList.coverImgUrl" alt="" style="margin: 6vw" />
 
               <!-- src="@/assets/mine/tubiao/woxihuan.png" -->
             </div>
             <div class="like">
-              <p>{{ likeList[0].name }}</p>
+              <p>{{ likeList.name }}</p>
               <p>{{ count }}首</p>
             </div>
           </div>
@@ -169,7 +171,7 @@
                   </p>
                   <span>导入外部歌单</span>
                 </div>-->
-              </div> 
+              </div>
             </div>
           </div>
         </van-tab>
@@ -189,10 +191,10 @@ export default {
       array: [],
       createArray: [],
       addArray: [],
-      addLength: "0",
-      list: "0", //歌单
-      count: "0",
-      likeList: [],
+      addLength: 0,
+      list: 0, //歌单
+      count: 0,
+      likeList: {},
       reEvent: [
         {
           name: "",
@@ -253,8 +255,11 @@ export default {
 
       const userSongCount = await userSongCountApi({ uid: getuid() });
       this.array = userSongCount.playlist;
-      this.likeList = this.array.splice(0, 1);
+      const likeList1 = this.array;
+      this.likeList = likeList1;
       console.log(this.likeList);
+
+      // (this.likeList = likeList1[0]), console.log(this.likeList); //[0].adType
       this.array.forEach((item) => {
         if (item.userId == getuid()) {
           this.createArray.push(item);
@@ -265,6 +270,7 @@ export default {
       this.list = this.createArray.length;
       this.addLength = this.addArray.length;
       console.log(this.addArray);
+      console.log(this.createArray);
       /////////
 
       let res = await eventApi({ uid: getuid() });
@@ -276,7 +282,7 @@ export default {
         this.reEvent[i].picUrl = this.reEvent[i].song.album.picUrl;
       }
 
-      // console.log(play.playlist[0].id);
+      // console.log(this.playlist[0].id);
     }
   },
   methods: {
@@ -383,7 +389,7 @@ body {
 }
 .like p:nth-child(2) {
   font-size: 12px;
-    color: #333;
+  color: #333;
 }
 .move span {
   color: red;
