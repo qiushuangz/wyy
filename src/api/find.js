@@ -6,7 +6,7 @@ export function bannerAPI() {
 }
 // 音乐日历
 export function unmissableAPI() {
-  return get('/mv/first?limit=10')
+  return get('/mv/first?limit=100')
   // return get('/top/artists')
 }
 
@@ -14,9 +14,9 @@ export function busyAPI() {
   return get('/mv/all')
 }
 
-// export function findAPI() {
+export function findAPI() {
 
-//   return get(
-//     "/homepage/block/page"
-//   );
-// }
+  return get(
+    "/homepage/block/page"
+  );
+}
