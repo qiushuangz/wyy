@@ -24,15 +24,26 @@
     <div class="bottom">
       <van-tabs v-model="active">
         <van-tab title="主页">
-          <div class="music">
-            <div>
-              <img src="@/assets/mine/tubiao/woxihuan.png" alt="" />
+          <router-link
+            :to="{
+              name: 'detaillist',
+              query: {
+                id: play,
+                coverImgUrl: '@/assets/userDetail/rant.png',
+                name: '我喜欢的音乐',
+              },
+            }"
+          >
+            <div class="music" @click="heartMove">
+              <div>
+                <img src="@/assets/mine/tubiao/woxihuan.png" alt="" />
+              </div>
+              <div class="like">
+                <p>我喜欢的音乐</p>
+                <p class="small">{{ count }}首</p>
+              </div>
             </div>
-            <div class="like">
-              <p>我喜欢的音乐</p>
-              <p class="small">{{ count }}首</p>
-            </div>
-          </div>
+          </router-link>
           <div class="music">
             <div>
               <img src="@/assets/userDetail/rant.png" alt="" />
@@ -105,7 +116,7 @@
             </div>
           </div> -->
 
-  <div v-for="item in addArray" :key="item.id">
+          <div v-for="item in addArray" :key="item.id">
             <router-link
               :to="{
                 name: 'detaillist',
@@ -129,10 +140,6 @@
               </div>
             </router-link>
           </div>
-
-
-
-
         </van-tab>
         <van-tab title="动态">
           <div class="move" v-for="item in reEvent" :key="item.id">
@@ -188,6 +195,7 @@ export default {
       createArray: [],
       addArray: [],
       playCount: "0",
+      play: [],
       event: [],
       reEvent: [
         {
@@ -213,7 +221,10 @@ export default {
     this.backgroundUrl = this.info.profile.backgroundUrl;
     const likeMusicList = await likeMusicApi({ uid: getuid() });
     console.log(likeMusicList.ids.length);
+    console.log(likeMusicList);
     this.count = likeMusicList.ids.length;
+    this.play = this.play.concat(likeMusicList.ids);
+    //console.log(this.play);
 
     const userSongCount = await userSongCountApi({ uid: getuid() });
     this.array = userSongCount.playlist;
@@ -243,6 +254,14 @@ export default {
       this.$router.push({
         name: "Mine",
       });
+    },
+    heartMove() {
+      if (this.count.length != 0) {
+        this.$router.push({
+          name: "Player",
+          query: { ids: this.play },
+        });
+      }
     },
   },
 };
@@ -346,11 +365,10 @@ export default {
   font-size: 2vw;
 }
 
-
 .music_m {
   display: flex;
   margin-bottom: 2vw;
-   padding-left: 6vw; 
+  padding-left: 6vw;
 }
 .music_m div img {
   /* margin-left: 6vw; */

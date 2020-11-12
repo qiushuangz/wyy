@@ -26,7 +26,6 @@
         </div>
       </div>
     </div>
-
     <div class="bootm">
       <div class="bottom_1">
         <van-icon

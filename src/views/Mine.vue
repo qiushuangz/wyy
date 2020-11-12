@@ -1,10 +1,11 @@
 <template>
   <div class="mine">
-    <topbar></topbar>
+    <topbar style="position:fixed;top:0;left:0;width:100%;z-index:1000;"></topbar>
     <div class="login_l">
       <div class="login" @click="picture" style="padding: 3vw 0">
         <div class="left" style="display: flex; align-item: center">
           <img :src="photo" class="icon" size="10vw" />
+          <!-- <img src="../assets/mine/tubiao/denglu.png" alt="" /> -->
           <span
             style="display: inline-block; line-height: 10vw; margin-left: 4vw"
             >{{ chara }}</span
@@ -24,31 +25,41 @@
           <dd>{{ item.title }}</dd>
         </dl>
       </div>
-      <div class="heart">
-        <div class="music" style="display: flex">
-          <div>
-            <img
-              src="@/assets/mine/tubiao/woxihuan.png"
-              alt=""
-              style="margin: 6vw"
-            />
+
+      <router-link
+        :to="{
+          name: 'detaillist',
+          query: {
+            id: likeList[0].id,
+            coverImgUrl: likeList[0].coverImgUrl,
+            name: likeList[0].name,
+          },
+        }"
+      >
+        <div class="heart">
+          <div class="music" style="display: flex">
+            <div>
+              <img :src="likeList[0].coverImgUrl" alt="" style="margin: 6vw" />
+
+              <!-- src="@/assets/mine/tubiao/woxihuan.png" -->
+            </div>
+            <div class="like">
+              <p>{{ likeList[0].name }}</p>
+              <p>{{ count }}首</p>
+            </div>
           </div>
-          <div class="like">
-            <p>我喜欢的音乐</p>
-            <p>{{ count }}首</p>
+          <div class="move">
+            <el-button
+              @click="heartMove"
+              size="small"
+              style="margin-top: 6vw; margin-right: 5vw"
+            >
+              <span>♥</span>
+              心动模式</el-button
+            >
           </div>
         </div>
-        <div class="move">
-          <el-button
-            @click="heartMove"
-            size="small"
-            style="margin-top: 6vw; margin-right: 5vw"
-          >
-            <span>♥</span>
-            心动模式</el-button
-          >
-        </div>
-      </div>
+      </router-link>
       <van-tabs v-model="active" style="">
         <van-tab
           title="创建歌单"
@@ -88,7 +99,7 @@
                     <div>
                       <img :src="item.coverImgUrl" alt="" />
                     </div>
-                    <div class="like" style="color: black;">
+                    <div class="like" style="color: black">
                       <p>{{ item.name }}</p>
                       <p class="small">
                         {{ item.trackCount }}首,播放{{ item.playCount }}次
@@ -152,13 +163,13 @@
                     </div>
                   </router-link>
                 </div>
-                <div class="download">
+                <!-- <div class="download">
                   <p>
                     <img src="@/assets/mine/tubiao/daoru1-copy.png" alt="" />
                   </p>
                   <span>导入外部歌单</span>
-                </div>
-              </div>
+                </div>-->
+              </div> 
             </div>
           </div>
         </van-tab>
@@ -193,8 +204,7 @@ export default {
       chara: "请登录",
       info: {},
       active: 2,
-      // likeList: [],
-      photo: "../assets/mine/tubiao/denglu.png",
+      photo: require("../assets/mine/tubiao/denglu.png"),
       play: [],
       Img: [
         {
@@ -231,14 +241,20 @@ export default {
       this.photo = this.info.profile.avatarUrl;
       this.chara = this.info.profile.nickname;
       const likeMusicList = await likeMusicApi({ uid: getuid() });
-      console.log(likeMusicList.ids);
+      console.log(likeMusicList);
       this.count = likeMusicList.ids.length;
       this.play = this.play.concat(likeMusicList.ids); //心动模式歌曲id数组.
-      //   console.log(this.play);
-      ///////////////////
+      console.log(this.play);
+
+      ///////////////////获取用户歌单
+
+      // const usrList = await playMoveList({ uid: getuid() });
+      // console.log(usrList.playlist[0]);
+
       const userSongCount = await userSongCountApi({ uid: getuid() });
       this.array = userSongCount.playlist;
       this.likeList = this.array.splice(0, 1);
+      console.log(this.likeList);
       this.array.forEach((item) => {
         if (item.userId == getuid()) {
           this.createArray.push(item);
@@ -271,6 +287,14 @@ export default {
         console.log(info_i);
       } else {
         this.$router.push({ name: "Login" });
+      }
+    },
+    heartMove() {
+      if (this.count.length != 0) {
+        this.$router.push({
+          name: "Player",
+          query: { ids: this.play },
+        });
       }
     },
   },
@@ -355,9 +379,11 @@ body {
 .like p:first-child {
   margin-top: 3vw;
   font-size: 14px;
+  color: #333;
 }
 .like p:nth-child(2) {
   font-size: 12px;
+    color: #333;
 }
 .move span {
   color: red;

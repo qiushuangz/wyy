@@ -1,8 +1,8 @@
 <template>
   <div class="video">
-    <topbar></topbar>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="推荐" name="first">
+    <topbar style="position:fixed;top:0;left:0;width:100%;background:#fff;z-index:100;"></topbar>
+    <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:40px;">
+      <el-tab-pane label="推荐" name="first" >
         <dl v-for="(item, index) in videoPlay" :key="index">
           <video
             :src="item.url"
@@ -64,7 +64,7 @@ import topbar from "@/views/Topbar";
 export default {
   data() {
     return {
-      activeName: "second",
+      activeName: "first",
       videoPlay: [],
       bgUrl: [],
     };
@@ -80,13 +80,9 @@ export default {
       this.videoPlay[i].url = uu.urls[0].url;
       this.videoPlay[i].bgUrl = this.videoPlay[i].data.creator.avatarUrl;
     }
-    console.log(this.videoPlay[0].bgUrl);
-    console.log(this.videoPlay[0].data.creator.avatarUrl);
-    console.log(this.videoPlay);
-    // console.log(data.creator.experts[1]);
-    // playApi()     creator.avatarUrl
-    // datas[0].data.vid
-    //  this.video = res.data;
+    // console.log(this.videoPlay[0].bgUrl);
+    // console.log(this.videoPlay[0].data.creator.avatarUrl);
+    // console.log(this.videoPlay);
   },
   methods: {
     handleClick(tab, event) {
@@ -106,16 +102,4 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-/* .change:hover {
-  color: red;
-} */
-
-/* .pic {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-.pic span {
-  display: block;
-} */
 </style>
