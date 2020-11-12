@@ -67,18 +67,16 @@ const routes = [
     component: () => import("../views/Player.vue"),
   },
   {
-<<<<<<< HEAD
     path: "/detaillist",
     name: "detaillist",
     component: () => import("../views/detailList.vue"),
-=======
+  },
+  {
     path: "/comment",
     name: "comment",
     component: () => import("../views/Player/comment.vue"),
->>>>>>> b94e472023a5338cb80738ee3fa3847c170a3f75
   },
 ];
-
 const router = new VueRouter({
   routes,
 });

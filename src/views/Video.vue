@@ -3,14 +3,14 @@
     <topbar></topbar>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="推荐" name="first">
-        <dl v-for="(item, index) in videoPlay" :key="index" style="width: 90vw">
+        <dl v-for="(item, index) in videoPlay" :key="index">
           <video
             :src="item.url"
             controls="controls"
             class="image"
             style="height: 40vw; display: block; margin: auto"
           ></video>
-          <p style="font-size: 3vw; margin-left: 8vw">{{ item.data.title }}</p>
+          <p style="font-size: 3vw; margin-left: 14vw">{{ item.data.title }}</p>
           <div style="display: flex" class="picCount">
             <div style="display: flex; align-item: center">
               <img

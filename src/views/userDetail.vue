@@ -49,7 +49,7 @@
             </h3>
             <h6>更多歌单</h6>
           </div>
-          <div class="music" v-for="item in createArray" :key="item.id">
+          <!-- <div class="music" v-for="item in createArray" :key="item.id">
             <div>
               <img :src="item.coverImgUrl" alt="" />
             </div>
@@ -59,7 +59,33 @@
                 {{ item.trackCount }}首,播放{{ item.playCount }}次
               </p>
             </div>
+          </div> -->
+
+          <div v-for="item in createArray" :key="item.id">
+            <router-link
+              :to="{
+                name: 'detaillist',
+                query: {
+                  id: item.id,
+                  coverImgUrl: item.coverImgUrl,
+                  name: item.name,
+                },
+              }"
+            >
+              <div class="music_m">
+                <div>
+                  <img :src="item.coverImgUrl" alt="" />
+                </div>
+                <div class="like" style="color: black">
+                  <p>{{ item.name }}</p>
+                  <p class="small">
+                    {{ item.trackCount }}首,播放{{ item.playCount }}次
+                  </p>
+                </div>
+              </div>
+            </router-link>
           </div>
+
           <div class="create">
             <h3>
               收藏歌单
@@ -67,7 +93,7 @@
             </h3>
             <h6>更多歌单</h6>
           </div>
-          <div class="music" v-for="item in addArray" :key="item.id">
+          <!-- <div class="music" v-for="item in addArray" :key="item.id">
             <div>
               <img :src="item.coverImgUrl" alt="" />
             </div>
@@ -77,7 +103,36 @@
                 {{ item.trackCount }}首,by{{ item.creator.nickname }}
               </p>
             </div>
+          </div> -->
+
+  <div v-for="item in addArray" :key="item.id">
+            <router-link
+              :to="{
+                name: 'detaillist',
+                query: {
+                  id: item.id,
+                  coverImgUrl: item.coverImgUrl,
+                  name: item.name,
+                },
+              }"
+            >
+              <div class="music_m">
+                <div>
+                  <img :src="item.coverImgUrl" alt="" />
+                </div>
+                <div class="like" style="color: black">
+                  <p>{{ item.name }}</p>
+                  <p class="small">
+                    {{ item.trackCount }}首,播放{{ item.playCount }}次
+                  </p>
+                </div>
+              </div>
+            </router-link>
           </div>
+
+
+
+
         </van-tab>
         <van-tab title="动态">
           <div class="move" v-for="item in reEvent" :key="item.id">
@@ -148,20 +203,18 @@ export default {
     // if (getuid()) {
     const resinfo = await mineApi({ uid: getuid() });
     //console.log(resinfo);
-    this.info = resinfo;//我的信息
-    this.photo = this.info.profile.avatarUrl;//头像
-    this.chara = this.info.profile.nickname;//头像名字
+    this.info = resinfo; //我的信息
+    this.photo = this.info.profile.avatarUrl; //头像
+    this.chara = this.info.profile.nickname; //头像名字
     console.log(this.info);
     //  this.info.listenSongs = resinfo.listenSongs;
     this.listensongs = this.info.listenSongs;
     // console.log(this.info.listenSongs);
     this.backgroundUrl = this.info.profile.backgroundUrl;
     const likeMusicList = await likeMusicApi({ uid: getuid() });
-     console.log(likeMusicList.ids.length);
+    console.log(likeMusicList.ids.length);
     this.count = likeMusicList.ids.length;
 
-
-    
     const userSongCount = await userSongCountApi({ uid: getuid() });
     this.array = userSongCount.playlist;
     this.likeList = this.array.splice(0, 1);
@@ -174,11 +227,6 @@ export default {
     });
     this.list = this.createArray.length;
     this.addLength = this.addArray.length;
-
-
-
-
-
 
     let res = await eventApi({ uid: getuid() });
     console.log(res.events);
@@ -295,6 +343,27 @@ export default {
   color: #333;
 }
 .moveList span {
+  font-size: 2vw;
+}
+
+
+.music_m {
+  display: flex;
+  margin-bottom: 2vw;
+   padding-left: 6vw; 
+}
+.music_m div img {
+  /* margin-left: 6vw; */
+  margin-right: 6vw;
+  width: 13vw;
+  height: 13vw;
+  display: inline-block;
+  border-radius: 2vw;
+}
+.music_m p:first-child {
+  margin: 0;
+}
+.small {
   font-size: 2vw;
 }
 </style>

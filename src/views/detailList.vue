@@ -1,9 +1,9 @@
 <template>
   <div class="detailList">
     <div class="detailList_d">
-      <div class="top" style="background: gray; width: 100%">
+      <div class="top" style="background: #cecece; width: 100%">
         <div
-          src="@/assets/mine/tubiao/gengduo.png"
+          src="../assets/mine/tubiao/gengduo.png"
           style="
             display: flex;
             justify-content: space-between;
@@ -14,6 +14,7 @@
           <span>
             <van-icon name="search" size="6vw" />
             <img
+              src="../assets/mine/tubiao/gengduo.png"
               style="
                 padding-top: -1vw;
                 margin-left: 3vw;
@@ -87,35 +88,87 @@
           style="
             height: 60vh;
             width: 100%;
-            background: red;
+            background: #fff;
             border-radius: 3vw;
             margin-top: -1vh;
           "
         >
-          <p>
+          <div style="line-height: 12vw; margin-left: 6vw">
             <i class="el-icon-video-play"></i>
-            <span>播放全部({{ listlength }})</span>
-          </p>
- 
-        </div >
-        
-        
-        
-        </div>
+            <span style="margin-left: 6vw">播放全部(共{{ listlength }}首)</span>
+          </div>
+          <div v-for="(i, index) in detail" :key="i.id">
+            <div
+              class="item"
+              @click="playEvent(i.id)"
+              style="display: flex; justify-content: space-between"
+            >
+              <div style="display: flex; align-item: center">
+                <div
+                  class="left"
+                  style="
+                    width: 20vw;
+                    height: 20vw;
+                    background: white;
+                    display: inline-block;
+                    line-height: 20vw;
+                    text-align: center;
+                  "
+                >
+                  {{ index + 1 }}
+                </div>
 
-
-
-
+                <div
+                  class="center"
+                  style="
+                    display: flex;
+                    align-item: center;
+                    flex-direction: column;
+                    justify-content: center;
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 4vw;
+                      overflow: hidden;
+                      width: 55vw;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                    "
+                    >{{ i.song_name }}</span
+                  >
+                  <p style="font-size: 2.5vw">{{ i.song_singer }}</p>
+                </div>
+              </div>
+              <div class="right" style="margin-top: 6vw; margin-right: 6vw">
+                <i class="el-icon-video-play"></i>
+                <img
+                  src="../assets/mine/tubiao/gengduo.png"
+                  style="
+                    margin-left: 3vw;
+                    width: 5vw;
+                    height: 5vw;
+                    display: inline-block;
+                  "
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template> 
 <script>
+import Vue from "vue";
+import { Toast } from "vant";
+Vue.use(Toast);
 import { mineApi } from "@/api/mine.js";
 import { getuid } from "@/utils/tools.js";
 import { userSongCountApi } from "@/api/userDetail.js";
-import { detailListApi } from "@/api/detailList.js";
+import { detailListApi, copy } from "@/api/detailList.js";
+
 export default {
   data() {
     return {
@@ -142,6 +195,26 @@ export default {
         name: "Mine",
       });
     },
+    async playEvent(v) {
+      // console.log(v);
+      const res = await copy({ id: v });
+      console.log(res.message);
+      if (res.success == true) {
+        this.$router.push({
+          name: "Player",
+          query: {
+            id: v,
+          },
+        });
+      } else {
+        Toast({
+          message: "亲爱的，暂无版权",
+          icon: "like-o",
+        });
+      }
+
+      console.log(res);
+    },
   },
   async created() {
     const userSongCount = await userSongCountApi({ uid: getuid() });
@@ -166,30 +239,36 @@ export default {
     this.photo = this.info.profile.avatarUrl;
     this.chara = this.info.profile.nickname;
     ////////////////
-    console.log(this.$route.query.id);
-    console.log(this.$route.query);
-    console.log(this.$route.query.coverImgUrl);
+    //console.log(this.$route.query.id);
+    // console.log(this.$route.query);
+    // console.log(this.$route.query.coverImgUrl);
     this.id = this.$route.query.id;
     this.coverImgUrl = this.$route.query.coverImgUrl;
     this.name = this.$route.query.name;
-    console.log(this.id);
+    //console.log(this.id);
 
     const list = await detailListApi({ id: this.id });
     this.listlength = list.playlist.tracks.length;
     // console.log(list[0].pc.fn);
-    console.log(list.playlist.tracks[1].pc.fn);
-    console.log(list.playlist.tracks);
-    console.log(this.detail);
+    //  console.log(list.playlist.tracks[1].pc.fn);
+    //console.log(list.playlist.tracks[0].id);
+    //console.log(this.detail);
     for (let i in list.playlist.tracks) {
-      console.log(i);
+      //  console.log(i);
       // this.detail[i].song_name = list.playlist.tracks[i].name;
       // this.detail[i].song_singer = list.playlist.tracks[i].ar[0].name;
       this.detail.push({
+        id: list.playlist.tracks[i].id,
         song_name: list.playlist.tracks[i].name,
         song_singer: list.playlist.tracks[i].ar[0].name,
       });
     }
-    console.log(this.detail);
+    // for (let i in this.detail) {
+    //   const message = await copy({ id: this.detail[i].id });
+    //   console.log(message);
+    // }
+
+    console.log(this.detail[0].song_name);
   },
 };
 </script>
@@ -204,7 +283,6 @@ export default {
   flex: 1;
   width: 100%;
   border-radius: 3vw;
-  margin-top: -4vw;
 }
 .icon {
   width: 10vw;

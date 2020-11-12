@@ -273,16 +273,6 @@ export default {
         this.$router.push({ name: "Login" });
       }
     },
-    // detailList(v) {
-    //   this.$router.push({
-    //     name: "detaillist",
-    //     query: {
-    //       id: v.id,
-    //       coverImgUrl: v.coverImgUrl,
-    //       name: 1,
-    //     },
-    //   });
-    // },
   },
   components: {
     topbar,
