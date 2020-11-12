@@ -6,7 +6,9 @@
     ></div>
     <div class="top">
       <div class="before">
-        <i class="el-icon-back"></i>
+        <!-- <router-link :to="{ name: 'Player', query: { id: 347230 } }"> -->
+        <i class="el-icon-back" @click="back"></i>
+        <!-- </router-link> -->
       </div>
       <div class="song">
         <div class="song_name">{{ now_song.name }}</div>
@@ -14,7 +16,11 @@
       </div>
     </div>
     <div class="mid">
-      <div class="mid_big" :style="{ backgroundImage: 'url(' + imgbig + ')' }">
+      <div
+        class="mid_big"
+        :style="{ backgroundImage: 'url(' + imgbig + ')' }"
+        ref="midpic"
+      >
         <div class="mid_s">
           <img :src="now_song.picUrl" alt="" />
         </div>
@@ -23,22 +29,43 @@
 
     <div class="bootm">
       <div class="bottom_1">
-        <van-icon name="like-o" size="2em" />
-        <a :href="palyUrl" download>
-          <van-icon name="down" size="2em" />
-        </a>
-        <van-icon name="comment-o" size="2em" />
+        <van-icon
+          name="like"
+          size="2em"
+          :class="like ? 'red' : 'white'"
+          @click="addlike"
+        />
+        <a :href="now_song.palyUrl" target="_blank" class="download" download>
+          <van-icon name="down" size="2em"
+        /></a>
+        <router-link
+          style="position: relative"
+          :to="{
+            name: 'comment',
+            query: {
+              id: songid,
+              pic: now_song.picUrl,
+              song_name: now_song.name,
+              song_singer: now_song.singer,
+              song_total: now_song.total,
+            },
+          }"
+        >
+          <van-icon name="comment-o" size="2em" color="white" />
+          <span class="total_um">{{ now_song.total }}</span>
+        </router-link>
       </div>
       <!-- @timeupdate="onTimeupdate"
           @loadedmetadata="onLoadedmetadata" -->
       <div class="bottom_2">
         <audio
-          :src="now_song.palyUrl"
+          :src="now_song.playurl"
           ref="audio"
           @pause="onPause"
           @play="onPlay"
           @timeupdate="onTimeupdate"
           @loadedmetadata="onLoadedmetadata"
+          autoplay
         ></audio>
         <span type="info">{{ audio.currentTime | formatSecond }}</span>
         <!-- 进度条ui -->
@@ -60,7 +87,7 @@
           @click="startPlayOrPause"
         ></i>
         <!-- <i class="el-icon-video-pause"></i> -->
-        <i class="el-icon-d-arrow-right"></i>
+        <i class="el-icon-d-arrow-right" @click="changeid"></i>
         <i class="el-icon-s-unfold"></i>
       </div>
     </div>
@@ -68,7 +95,14 @@
 </template>
 
 <script>
-import { getsongAPI } from "@/api/player";
+import { Toast } from "vant";
+import {
+  getsongAPI,
+  geturlAPI,
+  getcommentAPI,
+  likemusicAPI,
+  addlikeAPI,
+} from "@/api/player";
 // import vueaudio from "@/views/Player/VueAudio"
 // 将整数转换成 时：分：秒的格式
 function realFormatSecond(second) {
@@ -91,16 +125,17 @@ function realFormatSecond(second) {
   }
 }
 export default {
+  name: "MuPlayer",
   data() {
     return {
       imgbig: require("../assets/player/cangpian.jpg"),
-      now_song: {
-        name: "",
-        palyUrl:
-          "https://audio04.dmhmusic.com/71_53_T10056408996_128_4_1_0_sdk-cpm/cn/0412/M00/0D/C3/ChAKEV9CEbWAH86LAEw-ihryd_Y167.mp3?xcode=231fe742af7cdf72742c5bf4562b241b48a9bff",
-      },
-      songid: 347230,
+      now_song: {},
+      songid: 0,
+      like_all: [],
+      like: false,
       sliderTime: 0,
+      playing: false,
+      rotate: 1,
       audio: {
         // 该字段是音频是否处于播放状态的属性
         playing: false,
@@ -109,23 +144,85 @@ export default {
         // 音频最大播放时长
         maxTime: 0,
       },
+      timer: null,
     };
   },
-  async created() {
-    let res = await getsongAPI({ ids: this.songid });
-    console.log(res);
-    this.now_song.name = res.songs[0].name;
-    this.now_song.picUrl = res.songs[0].al.picUrl;
-    this.now_song.singer = res.songs[0].ar[0].name;
-    console.log(this.now_song);
+  //监听playing状态
+  watch: {
+    playing() {
+      if (this.playing) {
+        console.log("暂停状态");
+        clearInterval(this.timer);
+      } else {
+        this.timer = setInterval(() => {
+          this.$refs.midpic.style.transform = "rotateZ(" + this.rotate + "deg)";
+          this.$refs.midpic.style.transition = "all 1s linear";
+          this.rotate += 4;
+        }, 500);
+      }
+    },
   },
-  // components: {
-  //   vueaudio
-  // },
+  async created() {
+    this.songid = this.$route.query.id;
+    // console.log(this.songid);
+    let res = await getsongAPI({ ids: this.songid });
+    let res_url = await geturlAPI({ id: this.songid });
+    let res_comment = await getcommentAPI({ id: this.songid });
+    let res_like = await likemusicAPI({
+      id: this.songid,
+      timestamp: new Date().getTime(),
+    });
+
+    const d = {};
+    d.like_all = res_like.ids;
+    d.playurl = res_url.data[0].url;
+    d.name = res.songs[0].name;
+    d.picUrl = res.songs[0].al.picUrl;
+    d.singer = res.songs[0].ar[0].name;
+    d.total = res_comment.total;
+    this.now_song = d;
+    console.log(this.now_song.like_all);
+    console.log(Number(this.songid));
+    console.log(this.now_song.like_all.indexOf(Number(this.songid)));
+    if (this.now_song.like_all.indexOf(Number(this.songid)) >= 0) {
+      console.log(99);
+      this.like = true;
+    }
+    console.log(this.now_song);
+    this.timer = setInterval(() => {
+      this.$refs.midpic.style.transform = "rotateZ(" + this.rotate + "deg)";
+      this.$refs.midpic.style.transition = "all 1s linear";
+      this.rotate += 4;
+    }, 500);
+  },
+
   methods: {
+    changeid() {
+      this.songid = 210049;
+      console.log(this.songid);
+    },
+    //喜欢或者取消喜欢音乐
+    async addlike() {
+      this.like = !this.like;
+      let res = await addlikeAPI({ id: this.songid, like: this.like });
+      console.log(res);
+      if (res.code == 200) {
+        if (this.like) {
+          Toast.success("添加成功");
+        } else {
+          Toast("已取消喜欢");
+        }
+      }
+    },
+    back() {
+      this.$router.go(-1); //返回上一层
+    },
     // 控制音频的播放与暂停
     startPlayOrPause() {
+      // console.log("ok");
+      this.playing = this.audio.playing;
       console.log(this.audio.playing);
+      console.log(this.playing);
       return this.audio.playing ? this.pause() : this.play();
     },
     // 播放音频
@@ -154,7 +251,7 @@ export default {
     // 语音元数据主要是语音的长度之类的数据
     onLoadedmetadata(res) {
       console.log("loadedmetadata");
-      console.log(res);
+      // console.log(res);
       this.audio.maxTime = parseInt(res.target.duration);
     },
     // 拖动进度条，改变当前时间，index是进度条改变时的回调函数的参数0-100之间，需要换算成实际时间
@@ -166,7 +263,7 @@ export default {
     // 当音频当前时间改变后，进度条也要改变
     onTimeupdate(res) {
       console.log("timeupdate");
-      console.log(res);
+      // console.log(res);
       this.audio.currentTime = res.target.currentTime;
       this.sliderTime = parseInt(
         (this.audio.currentTime / this.audio.maxTime) * 100
@@ -203,7 +300,7 @@ export default {
   height: 100%;
   width: 100%;
   background-size: 100% 100%;
-  filter: grayscale(10%) blur(20px) contrast(20%) brightness(90%);
+  filter: grayscale(10%) blur(10px) contrast(20%) brightness(90%);
   z-index: -9;
   position: absolute;
 }
@@ -296,6 +393,26 @@ export default {
 .song_user {
   font-size: 3.5vw;
   color: #afaaa3;
+}
+.download:visited {
+  color: white;
+}
+.total_um {
+  font-size: 1vw;
+  color: white;
+  padding: 0.5vw;
+  display: block;
+  border-radius: 1.5vw;
+  position: absolute;
+  top: -2vw;
+  left: 4vw;
+  background-color: rgba(190, 180, 180, 0.8);
+}
+.red {
+  color: red;
+}
+.white {
+  color: white;
 }
 /*
 .mid .mid_big .mid_s{
