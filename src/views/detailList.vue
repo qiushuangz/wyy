@@ -96,16 +96,6 @@
             <i class="el-icon-video-play"></i>
             <span>播放全部({{ listlength }})</span>
           </p>
- 
-        </div >
-        
-        
-        
-        </div>
-
-
-
-
         </div>
       </div>
     </div>
