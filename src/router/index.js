@@ -40,6 +40,13 @@ const routes = [
     path: "/find",
     name: "Find",
     component: () => import("../views/Find.vue"),
+
+
+
+  }, {
+    path: "/unfindall",
+    name: "UnFindAll",
+    component: () => import("../views/find/UnFindAll.vue"),
   },
   {
     path: "/yuncun",
@@ -76,8 +83,12 @@ const routes = [
     name: "comment",
     component: () => import("../views/Player/comment.vue"),
   },
+  {
+    path: "/*",
+    name: "404",
+    component: () => import("../views/404.vue"),
+  }
 ];
-
 const router = new VueRouter({
   routes,
 });

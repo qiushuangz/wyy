@@ -150,12 +150,14 @@
     <van-tabbar v-model="active">
       <van-tabbar-item icon="circle">夜间模式</van-tabbar-item>
       <van-tabbar-item icon="setting-o">设置</van-tabbar-item>
-      <van-tabbar-item icon="circle">退出</van-tabbar-item>
+      <van-tabbar-item icon="circle" @click="quit">退出</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
 
 <script>
+import { quitAPI } from "@/api/login";
+import { Notify } from "vant";
 export default {
   data() {
     return {
@@ -164,7 +166,6 @@ export default {
         yunbei: require("../assets/sidebar/yunBei.png"),
         messageImg: require("../assets/sidebar/message.png"),
         chuangzuozheImg: require("../assets/sidebar/chuangzuozhe.png"),
-
         tinggeshiquImg: require("../assets/sidebar/tinggeshiqu.png"),
         yuncunyoupiaoImg: require("../assets/sidebar/yuncunyoupiao.png"),
         shangchengImg: require("../assets/sidebar/shangcheng.png"),
@@ -187,6 +188,17 @@ export default {
         tuichuImg: require("../assets/sidebar/tuichu.png"),
       },
     };
+  },
+  methods: {
+    async quit() {
+      if (localStorage.getItem("uid")) {
+        const quit1 = await quitAPI();
+        localStorage.removeItem("uid");
+        if (quit1) Notify("退出登录成功");
+      } else {
+        Notify("您还没有登录");
+      }
+    },
   },
 };
 </script>

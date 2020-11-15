@@ -51,7 +51,7 @@
     <el-image :src="social" style="width: 80%; margin: 5% 10% 0" alt="" />
     <!-- 同意协议 -->
     <el-row :gutter="10" style="margin-top: 5%">
-      <el-col :xs="4" :sm="4" :md="4"
+      <el-col :xs="4" :sm="4" :md="4" style="margin-left: 20px"
         ><div class="grid-content bg-purple">
           <el-checkbox v-model="checked">同意</el-checkbox>
         </div></el-col
@@ -61,7 +61,7 @@
           《用户协议》
         </div></el-col
       >
-      <el-col :xs="6" :sm="6" :md="8"
+      <el-col :xs="6" :sm="6" :md="8" style="margin: 0 -10px 0 -10px"
         ><div class="grid-content bg-purple-light item">
           《隐私政策》
         </div></el-col
