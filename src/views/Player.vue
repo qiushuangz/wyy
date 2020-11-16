@@ -278,7 +278,7 @@ export default {
 }
 .bottom_1 {
   height: 6vh;
-  border: solid 1px rgb(204, 38, 38);
+  /* border: solid 1px rgb(204, 38, 38); */
   display: flex;
   font-size: 3.5vw;
   color: white;
@@ -292,7 +292,7 @@ export default {
 
 .bottom_2 {
   height: 6vh;
-  border: solid 1px #777;
+  /* border: solid 1px #777; */
   display: flex;
   justify-content: space-around;
   align-items: center;
