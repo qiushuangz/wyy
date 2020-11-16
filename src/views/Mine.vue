@@ -316,7 +316,6 @@ body {
   width: 100%;
   height: 100%;
 }
-
 .login_l {
   padding: 0 6vw;
   background: #faf8f8;
