@@ -15,7 +15,7 @@
     </div>
     <div class="mid">
       <div
-        class="mid_big"
+        :class="animt"
         :style="{ backgroundImage: 'url(' + imgbig + ')' }"
         ref="midpic"
       >
@@ -68,12 +68,13 @@
       </div>
       <div class="bottom_3">
         <i class="el-icon-share"></i>
-        <i class="el-icon-d-arrow-left"></i>
+        <i class="el-icon-d-arrow-left" @click="back_song"></i>
         <i
           :class="isplaying ? 'el-icon-video-play' : 'el-icon-video-pause'"
           @click="startPlayOrPause"
+          style="font-size: 14vw"
         ></i>
-        <i class="el-icon-d-arrow-right"></i>
+        <i class="el-icon-d-arrow-right" @click="next_song"></i>
         <i class="el-icon-s-unfold"></i>
       </div>
     </div>
@@ -118,6 +119,7 @@ export default {
       "maxTime",
       "currentTime",
       "Timeupdate",
+      "song_list",
     ]),
   },
   data() {
@@ -129,16 +131,27 @@ export default {
       like: false,
       isplaying: false,
       slider: 0,
+      animt: "",
+      conn: 0,
     };
   },
   /////////////////////////////
   methods: {
+    //上一曲
+    back_song() {
+      this.conn--;
+      let back_id = this.song_list[this.conn];
+      this.getsonginfo(back_id);
+    },
+    //下一曲
+    next_song() {
+      this.conn++;
+      let next_id = this.song_list[this.conn];
+      this.getsonginfo(next_id);
+    },
+    //拖动进度条callback当前推动的位置
     changeCurrentTime(index) {
-      // this.$store.commit("set_sliderTime", index);
-      // this.sliderTime = index;
       this.$store.commit("set_currentTime", index);
-      console.log(index);
-      console.log(this.sliderTime);
     },
     //喜欢或者取消喜欢音乐
     async addlike() {
@@ -153,7 +166,7 @@ export default {
         }
       }
     },
-    //返回上一层
+    //返回上一层路由
     back() {
       this.$router.go(-1);
     },
@@ -162,41 +175,49 @@ export default {
       this.isplaying = !this.isplaying;
       console.log(this.isplaying);
       this.$store.commit("set_playing", this.isplaying);
+      if (this.isplaying) {
+        this.animt = "mid_big state";
+      } else {
+        this.animt = "mid_big";
+      }
     },
-
-    //
+    async getsonginfo(idd) {
+      let res = await getsongAPI({ ids: idd });
+      let res_url = await geturlAPI({ id: idd });
+      let res_comment = await getcommentAPI({ id: idd });
+      let res_like = await likemusicAPI({
+        id: idd,
+        timestamp: new Date().getTime(),
+      });
+      this.now_song = {
+        like_all: res_like.ids,
+        playurl: res_url.data[0].url,
+        name: res.songs[0].name,
+        picUrl: res.songs[0].al.picUrl,
+        singer: res.songs[0].ar[0].name,
+        total: res_comment.total,
+      };
+      if (this.now_song.like_all.indexOf(Number(idd)) >= 0) {
+        this.like = true;
+      }
+      this.$store.commit("set_url", this.now_song.playurl);
+    },
   },
   ///////////////////////////////////
   async created() {
-    this.songid = this.$route.query.id;
-    let res = await getsongAPI({ ids: this.songid });
-    let res_url = await geturlAPI({ id: this.songid });
-    let res_comment = await getcommentAPI({ id: this.songid });
-    let res_like = await likemusicAPI({
-      id: this.songid,
-      timestamp: new Date().getTime(),
-    });
-    this.now_song = {
-      like_all: res_like.ids,
-      playurl: res_url.data[0].url,
-      name: res.songs[0].name,
-      picUrl: res.songs[0].al.picUrl,
-      singer: res.songs[0].ar[0].name,
-      total: res_comment.total,
-    };
-
-    if (this.now_song.like_all.indexOf(Number(this.songid)) >= 0) {
-      this.like = true;
+    this.animt = "mid_big";
+    if (this.$route.query.id) {
+      this.songid = this.$route.query.id;
+      this.getsonginfo(this.songid);
+    } else {
+      console.log(this.song_list);
+      this.getsonginfo(this.song_list[0]);
     }
-    console.log(this.now_song);
-    this.$store.commit("set_url", this.now_song.playurl);
   },
   /////////////////////////////////////////
+
   filters: {
     // 使用组件过滤器来动态改变按钮的显示
-    // transPlayPause(value) {
-    //   return value ? "暂停" : "播放";
-    // },
     // 将整数转化成时分秒
     formatSecond(second = 0) {
       return realFormatSecond(second);
@@ -205,7 +226,6 @@ export default {
   watch: {
     Timeupdate() {
       this.slider = parseInt((this.Timeupdate / this.maxTime) * 100);
-      console.log(this.slider);
     },
   },
 };
@@ -289,6 +309,7 @@ export default {
   height: 10vh;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 .bottom_3 i {
   color: white;
@@ -299,7 +320,7 @@ export default {
 .before i {
   line-height: 1;
   display: block;
-  font-size: 10vw;
+  font-size: 8vw;
   color: white;
 }
 .song {
@@ -344,4 +365,32 @@ export default {
   height: 70%;
   position: absolute;
 } */
+.mid_big {
+  animation-name: myfirst;
+  animation-duration: 30s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* text-align: center; */
+}
+@keyframes myfirst {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.state {
+  animation-play-state: paused;
+}
+/* ///////// */
 </style>

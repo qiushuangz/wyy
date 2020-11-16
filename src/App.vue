@@ -15,11 +15,10 @@
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
       autoplay
-      controls
     ></audio>
-    <keep-alive>
-      <router-view />
-    </keep-alive>
+    <!-- <keep-alive> -->
+    <router-view />
+    <!-- </keep-alive> -->
   </div>
 </template>
 <script>
@@ -41,7 +40,6 @@ export default {
   methods: {
     // 控制音频的播放与暂停
     startPlayOrPause() {
-      // this.$store.commit("set_playing", this.playing);
       return this.playing ? this.pause() : this.play();
     },
     // 播放音频
@@ -69,11 +67,6 @@ export default {
     onTimeupdate(res) {
       //当前播放的位置，单位秒
       this.$store.commit("set_Timeupdate", res.target.currentTime);
-      //当前滑块的位置，百分比
-      // this.$store.commit(
-      //   "set_sliderTime",
-      //   parseInt((this.Timeupdate / this.maxTime) * 100)
-      // );
     },
   },
 
