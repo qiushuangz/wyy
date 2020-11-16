@@ -33,7 +33,6 @@ export default {
   methods: {
     goBack() {
       console.log("go back");
-      // this.$rou
       this.$router.push({ path: "/find" });
     },
   },

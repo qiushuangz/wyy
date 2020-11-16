@@ -95,6 +95,10 @@
         >
           <div style="line-height: 12vw; margin-left: 6vw">
             <i class="el-icon-video-play"></i>
+<<<<<<< HEAD
+            <span>播放全部({{ listlength }})</span>
+          </p>
+=======
             <span style="margin-left: 6vw">播放全部(共{{ listlength }}首)</span>
           </div>
           <div v-for="(i, index) in detail" :key="i.id">
@@ -155,6 +159,7 @@
               </div>
             </div>
           </div>
+>>>>>>> fb7046be989ee5e82321ea457d1952ecfc14112a
         </div>
       </div>
     </div>

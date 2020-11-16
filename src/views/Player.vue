@@ -6,9 +6,7 @@
     ></div>
     <div class="top">
       <div class="before">
-        <!-- <router-link :to="{ name: 'Player', query: { id: 347230 } }"> -->
         <i class="el-icon-back" @click="back"></i>
-        <!-- </router-link> -->
       </div>
       <div class="song">
         <div class="song_name">{{ now_song.name }}</div>
@@ -34,7 +32,7 @@
           :class="like ? 'red' : 'white'"
           @click="addlike"
         />
-        <a :href="now_song.palyUrl" target="_blank" class="download" download>
+        <a :href="now_song.palyUrl" class="download">
           <van-icon name="down" size="2em"
         /></a>
         <router-link
@@ -57,36 +55,25 @@
       <!-- @timeupdate="onTimeupdate"
           @loadedmetadata="onLoadedmetadata" -->
       <div class="bottom_2">
-        <audio
-          :src="now_song.playurl"
-          ref="audio"
-          @pause="onPause"
-          @play="onPlay"
-          @timeupdate="onTimeupdate"
-          @loadedmetadata="onLoadedmetadata"
-          autoplay
-        ></audio>
-        <span type="info">{{ audio.currentTime | formatSecond }}</span>
-        <!-- 进度条ui -->
+        <span type="info">{{ Timeupdate | formatSecond }}</span>
+        <!-- @change="changeCurrentTime" -->
+        <!-- :format-tooltip="formatProcessToolTip" -->
+        <!-- v-model="sliderTime" -->
         <el-slider
-          size="mini"
-          color="red"
-          v-model="sliderTime"
-          :format-tooltip="formatProcessToolTip"
           @change="changeCurrentTime"
           class="slider"
+          v-model="slider"
         ></el-slider>
-        <span type="info">{{ audio.maxTime | formatSecond }}</span>
+        <span type="info">{{ maxTime | formatSecond }}</span>
       </div>
       <div class="bottom_3">
         <i class="el-icon-share"></i>
         <i class="el-icon-d-arrow-left"></i>
         <i
-          :class="audio.playing ? 'el-icon-video-pause' : 'el-icon-video-play'"
+          :class="isplaying ? 'el-icon-video-play' : 'el-icon-video-pause'"
           @click="startPlayOrPause"
         ></i>
-        <!-- <i class="el-icon-video-pause"></i> -->
-        <i class="el-icon-d-arrow-right" @click="changeid"></i>
+        <i class="el-icon-d-arrow-right"></i>
         <i class="el-icon-s-unfold"></i>
       </div>
     </div>
@@ -95,26 +82,16 @@
 
 <script>
 import { Toast } from "vant";
-import {
-  getsongAPI,
-  geturlAPI,
-  getcommentAPI,
-  likemusicAPI,
-  addlikeAPI,
-} from "@/api/player";
-// import vueaudio from "@/views/Player/VueAudio"
+import { mapState } from "vuex";
 // 将整数转换成 时：分：秒的格式
 function realFormatSecond(second) {
   var secondType = typeof second;
-
   if (secondType === "number" || secondType === "string") {
     second = parseInt(second);
-
     var hours = Math.floor(second / 3600);
     second = second - hours * 3600;
     var mimute = Math.floor(second / 60);
     second = second - mimute * 60;
-
     return (
       // hours + ":" + ("0" + mimute).slice(-2) + ":" + ("0" + second).slice(-2)
       ("0" + mimute).slice(-2) + ":" + ("0" + second).slice(-2)
@@ -123,82 +100,45 @@ function realFormatSecond(second) {
     return "0:00:00";
   }
 }
+//  addlikeAPI,
+import {
+  getsongAPI,
+  geturlAPI,
+  getcommentAPI,
+  likemusicAPI,
+  addlikeAPI,
+} from "@/api/player";
 export default {
-  name: "MuPlayer",
+  computed: {
+    ...mapState([
+      "song_url",
+      "sliderTime",
+      "audio",
+      "index",
+      "maxTime",
+      "currentTime",
+      "Timeupdate",
+    ]),
+  },
   data() {
     return {
-      imgbig: require("../assets/player/cangpian.jpg"),
       now_song: {},
-      songid: 0,
-      like_all: [],
+      //唱片图
+      imgbig: require("../assets/player/cangpian.jpg"),
+      //是否喜欢这首歌
       like: false,
-      sliderTime: 0,
-      playing: false,
-      rotate: 1,
-      audio: {
-        // 该字段是音频是否处于播放状态的属性
-        playing: false,
-        // 音频当前播放时长
-        currentTime: 0,
-        // 音频最大播放时长
-        maxTime: 0,
-      },
-      timer: null,
+      isplaying: false,
+      slider: 0,
     };
   },
-  //监听playing状态
-  watch: {
-    playing() {
-      if (this.playing) {
-        console.log("暂停状态");
-        clearInterval(this.timer);
-      } else {
-        this.timer = setInterval(() => {
-          this.$refs.midpic.style.transform = "rotateZ(" + this.rotate + "deg)";
-          this.$refs.midpic.style.transition = "all 1s linear";
-          this.rotate += 4;
-        }, 500);
-      }
-    },
-  },
-  async created() {
-    this.songid = this.$route.query.id;
-    // console.log(this.songid);
-    let res = await getsongAPI({ ids: this.songid });
-    let res_url = await geturlAPI({ id: this.songid });
-    let res_comment = await getcommentAPI({ id: this.songid });
-    let res_like = await likemusicAPI({
-      id: this.songid,
-      timestamp: new Date().getTime(),
-    });
-
-    const d = {};
-    d.like_all = res_like.ids;
-    d.playurl = res_url.data[0].url;
-    d.name = res.songs[0].name;
-    d.picUrl = res.songs[0].al.picUrl;
-    d.singer = res.songs[0].ar[0].name;
-    d.total = res_comment.total;
-    this.now_song = d;
-    console.log(this.now_song.like_all);
-    console.log(Number(this.songid));
-    console.log(this.now_song.like_all.indexOf(Number(this.songid)));
-    if (this.now_song.like_all.indexOf(Number(this.songid)) >= 0) {
-      console.log(99);
-      this.like = true;
-    }
-    console.log(this.now_song);
-    this.timer = setInterval(() => {
-      this.$refs.midpic.style.transform = "rotateZ(" + this.rotate + "deg)";
-      this.$refs.midpic.style.transition = "all 1s linear";
-      this.rotate += 4;
-    }, 500);
-  },
-
+  /////////////////////////////
   methods: {
-    changeid() {
-      this.songid = 210049;
-      console.log(this.songid);
+    changeCurrentTime(index) {
+      // this.$store.commit("set_sliderTime", index);
+      // this.sliderTime = index;
+      this.$store.commit("set_currentTime", index);
+      console.log(index);
+      console.log(this.sliderTime);
     },
     //喜欢或者取消喜欢音乐
     async addlike() {
@@ -207,83 +147,65 @@ export default {
       console.log(res);
       if (res.code == 200) {
         if (this.like) {
-          Toast.success("添加成功");
+          Toast.success("已添加到我的喜欢");
         } else {
           Toast("已取消喜欢");
         }
       }
     },
+    //返回上一层
     back() {
-      this.$router.go(-1); //返回上一层
+      this.$router.go(-1);
     },
-    // 控制音频的播放与暂停
+    //播放或者暂停音乐
     startPlayOrPause() {
-      // console.log("ok");
-      this.playing = this.audio.playing;
-      console.log(this.audio.playing);
-      console.log(this.playing);
-      return this.audio.playing ? this.pause() : this.play();
-    },
-    // 播放音频
-    play() {
-      this.$refs.audio.play();
-    },
-    // 暂停音频
-    pause() {
-      this.$refs.audio.pause();
-    },
-    // 当音频播放
-    onPlay() {
-      this.audio.playing = true;
-    },
-    // 当音频暂停
-    onPause() {
-      this.audio.playing = false;
-    },
-    // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
-    // onTimeupdate(res) {
-    //   console.log("timeupdate");
-    //   console.log(res);
-    //   this.audio.currentTime = res.target.currentTime;
-    // },
-    // 当加载语音流元数据完成后，会触发该事件的回调函数
-    // 语音元数据主要是语音的长度之类的数据
-    onLoadedmetadata(res) {
-      console.log("loadedmetadata");
-      // console.log(res);
-      this.audio.maxTime = parseInt(res.target.duration);
-    },
-    // 拖动进度条，改变当前时间，index是进度条改变时的回调函数的参数0-100之间，需要换算成实际时间
-    changeCurrentTime(index) {
-      this.$refs.audio.currentTime = parseInt(
-        (index / 100) * this.audio.maxTime
-      );
-    },
-    // 当音频当前时间改变后，进度条也要改变
-    onTimeupdate(res) {
-      console.log("timeupdate");
-      // console.log(res);
-      this.audio.currentTime = res.target.currentTime;
-      this.sliderTime = parseInt(
-        (this.audio.currentTime / this.audio.maxTime) * 100
-      );
+      this.isplaying = !this.isplaying;
+      console.log(this.isplaying);
+      this.$store.commit("set_playing", this.isplaying);
     },
 
-    // 进度条格式化toolTip
-    formatProcessToolTip(index = 0) {
-      index = parseInt((this.audio.maxTime / 100) * index);
-      return realFormatSecond(index);
-      // return "进度条: " + realFormatSecond(index);
-    },
+    //
   },
+  ///////////////////////////////////
+  async created() {
+    this.songid = this.$route.query.id;
+    let res = await getsongAPI({ ids: this.songid });
+    let res_url = await geturlAPI({ id: this.songid });
+    let res_comment = await getcommentAPI({ id: this.songid });
+    let res_like = await likemusicAPI({
+      id: this.songid,
+      timestamp: new Date().getTime(),
+    });
+    this.now_song = {
+      like_all: res_like.ids,
+      playurl: res_url.data[0].url,
+      name: res.songs[0].name,
+      picUrl: res.songs[0].al.picUrl,
+      singer: res.songs[0].ar[0].name,
+      total: res_comment.total,
+    };
+
+    if (this.now_song.like_all.indexOf(Number(this.songid)) >= 0) {
+      this.like = true;
+    }
+    console.log(this.now_song);
+    this.$store.commit("set_url", this.now_song.playurl);
+  },
+  /////////////////////////////////////////
   filters: {
     // 使用组件过滤器来动态改变按钮的显示
-    transPlayPause(value) {
-      return value ? "暂停" : "播放";
-    },
+    // transPlayPause(value) {
+    //   return value ? "暂停" : "播放";
+    // },
     // 将整数转化成时分秒
     formatSecond(second = 0) {
       return realFormatSecond(second);
+    },
+  },
+  watch: {
+    Timeupdate() {
+      this.slider = parseInt((this.Timeupdate / this.maxTime) * 100);
+      console.log(this.slider);
     },
   },
 };
