@@ -7,8 +7,9 @@
       v-if="show == true"
     />
     <div class="van_show" v-else>
-      <div>
+      <div class="van1">
         <img class="img_tou" :src="hotwall.simpleUserInfo.avatar" alt="" /><span
+          style="margin-left: 5vw"
           >{{ hotwall.simpleUserInfo.nickname }}</span
         >
       </div>
@@ -97,6 +98,7 @@ export default {
 .next {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 .next i {
   font-size: 10vw;
@@ -104,11 +106,22 @@ export default {
 .next i:hover {
   color: aquamarine;
 }
-
+.van_show {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-content: space-around;
+}
 /* .bgc img {
   width: 50%;
   filter: blur(10px);
   z-index: -1;
   position: relative;
 } */
+.van1 {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
 </style>
