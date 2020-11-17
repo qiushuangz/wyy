@@ -40,7 +40,7 @@
           :to="{
             name: 'comment',
             query: {
-              id: songid,
+              id: now_song.id,
               pic: now_song.picUrl,
               song_name: now_song.name,
               song_singer: now_song.singer,
@@ -190,6 +190,7 @@ export default {
         timestamp: new Date().getTime(),
       });
       this.now_song = {
+        id: idd,
         like_all: res_like.ids,
         playurl: res_url.data[0].url,
         name: res.songs[0].name,
