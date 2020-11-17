@@ -96,7 +96,6 @@
               </div>
             </router-link>
           </div>
-
           <div class="create">
             <h3>
               收藏歌单
@@ -208,6 +207,8 @@ export default {
     };
   },
   async created() {
+    console.log(this.$route.query);
+
     // if (getuid()) {
     const resinfo = await mineApi({ uid: getuid() });
     //console.log(resinfo);

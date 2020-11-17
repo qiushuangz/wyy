@@ -32,21 +32,22 @@
         :to="{
           name: 'detaillist',
           query: {
-            id: likeList.id,
-            coverImgUrl: likeList.coverImgUrl,
-            name: likeList.name,
+            id: 999,
           },
         }"
       >
         <div class="heart">
           <div class="music" style="display: flex">
             <div>
-              <img :src="likeList.coverImgUrl" alt="" style="margin: 6vw" />
+              <!-- <img :src="likeList.coverImgUrl" alt="" style="margin: 6vw" /> -->
 
-              <!-- src="@/assets/mine/tubiao/woxihuan.png" -->
+              <img
+                src="@/assets/mine/tubiao/woxihuan.png"
+                style="margin: 6vw"
+              />
             </div>
             <div class="like">
-              <p>{{ likeList.name }}</p>
+              <p>我喜欢的音乐</p>
               <p>{{ count }}首</p>
             </div>
           </div>
@@ -296,6 +297,8 @@ export default {
       }
     },
     heartMove() {
+      console.log("888");
+      console.log(this.count.length);
       if (this.count.length != 0) {
         this.$router.push({
           name: "Player",

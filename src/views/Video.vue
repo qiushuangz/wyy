@@ -1,8 +1,17 @@
 <template>
   <div class="video">
-    <topbar style="position:fixed;top:0;left:0;width:100%;background:#fff;z-index:100;"></topbar>
-    <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:40px;">
-      <el-tab-pane label="推荐" name="first" >
+    <topbar
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 100;
+      "
+    ></topbar>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="推荐" name="first">
         <dl v-for="(item, index) in videoPlay" :key="index">
           <video
             :src="item.url"
