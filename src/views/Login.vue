@@ -34,18 +34,20 @@
       >一键登录</el-button
     >
     <!-- 立即体验按钮 -->
-    <el-button
-      round
-      style="
-        border: 1px solid #f46658;
-        background: #dd2d20;
-        width: 80%;
-        margin: 5% 10% 0;
-        color: #fff;
-      "
-      type="danger"
-      plain
-      >立即体验</el-button
+    <router-link :to="{ name: 'Mine' }">
+      <el-button
+        round
+        style="
+          border: 1px solid #f46658;
+          background: #dd2d20;
+          width: 80%;
+          margin: 5% 10% 0;
+          color: #fff;
+        "
+        type="danger"
+        plain
+        >立即体验</el-button
+      ></router-link
     >
     <!-- 第三方登录链接，写成了图片 -->
     <el-image :src="social" style="width: 80%; margin: 5% 10% 0" alt="" />
