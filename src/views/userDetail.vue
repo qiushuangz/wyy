@@ -60,18 +60,6 @@
             </h3>
             <h6>更多歌单</h6>
           </div>
-          <!-- <div class="music" v-for="item in createArray" :key="item.id">
-            <div>
-              <img :src="item.coverImgUrl" alt="" />
-            </div>
-            <div class="like">
-              <p>{{ item.name }}</p>
-              <p class="small">
-                {{ item.trackCount }}首,播放{{ item.playCount }}次
-              </p>
-            </div>
-          </div> -->
-
           <div v-for="item in createArray" :key="item.id">
             <router-link
               :to="{
