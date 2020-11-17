@@ -48,7 +48,10 @@
           @click="cleanHandle"
         />
         <!-- <span class="el-icon-close" "></span> -->
-        <ul style="position: absolute; height: 125vw; overflow: auto">
+        <ul
+          style="position: absolute; height: 125vw; width: 80%; overflow: auto
+          "
+        >
           <li
             v-for="item in songs"
             :key="item.id"
@@ -116,7 +119,9 @@
               color: (96, 96, 96);
             "
           >
-            <i style="margin-right: 7vw;font-size:4.5vw; color: #f05048">{{ index + 1 }}</i
+            <i style="margin-right: 7vw; font-size: 4.5vw; color: #f05048">{{
+              index + 1
+            }}</i
             >{{ item.searchWord
             }}<i
               style="
@@ -167,7 +172,7 @@ export default {
       hotDetail: [],
       hotDetailAll: [],
       newHotDetail: [],
-      songsArray:[],
+      songsArray: [],
     };
   },
   watch: {
@@ -201,11 +206,11 @@ export default {
 
       this.hotDetail = this.hotDetail.concat(this.hotDetailAll);
       console.log(this.hotDetail);
-      for(let i in  this.hotDetail){
-      this.songsArray.push({id:this.hotDetail[i].id});
-      console.log(this.hotDetail[i].id);
+      for (let i in this.hotDetail) {
+        this.songsArray.push({ id: this.hotDetail[i].id });
+        console.log(this.hotDetail[i].id);
       }
-     
+
       this.isLoad = false;
       this.isShow = false;
     },

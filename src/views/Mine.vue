@@ -5,7 +5,7 @@
         style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000"
       ></topbar>
     </van-sticky>
-    <div class="login_l">
+    <div class="login_l" style="margin-top: 8vh">
       <div class="login" @click="picture" style="padding: 3vw 0">
         <div class="left" style="display: flex; align-item: center">
           <img :src="photo" class="icon" size="10vw" />
@@ -29,41 +29,45 @@
           <dd>{{ item.title }}</dd>
         </dl>
       </div>
+      <!-- ------------------------------------------- -->
 
-      <router-link
-        :to="{
-          name: 'detaillist',
-          query: {
-            id: likeList.id,
-            coverImgUrl: likeList.coverImgUrl,
-            name: likeList.name,
-          },
-        }"
-      >
-        <div class="heart">
+      <div class="heart">
+        <router-link
+          :to="{
+            name: 'detaillist',
+            query: {
+              id: moveList.id,
+              coverImgUrl: moveList.coverImgUrl,
+              name: moveList.name,
+            },
+          }"
+        >
           <div class="music" style="display: flex">
             <div>
-              <img :src="likeList.coverImgUrl" alt="" style="margin: 6vw" />
-
-              <!-- src="@/assets/mine/tubiao/woxihuan.png" -->
+              <!-- <img :src="likeList.coverImgUrl" alt="" style="margin: 6vw" /> -->
+              <img
+                src="@/assets/mine/tubiao/woxihuan.png"
+                style="margin: 6vw"
+              />
             </div>
             <div class="like">
-              <p>{{ likeList.name }}</p>
+              <p>我喜欢的音乐</p>
               <p>{{ count }}首</p>
             </div>
           </div>
-          <div class="move">
-            <el-button
-              @click="heartMove"
-              size="small"
-              style="margin-top: 6vw; margin-right: 5vw"
-            >
-              <span>♥</span>
-              心动模式</el-button
-            >
-          </div>
+        </router-link>
+        <div class="move">
+          <el-button
+            @click="heartMove"
+            size="small"
+            style="margin-top: 6vw; margin-right: 5vw"
+          >
+            <span>♥</span>
+            心动模式</el-button
+          >
         </div>
-      </router-link>
+      </div>
+
       <van-tabs v-model="active" style="">
         <van-tab
           title="创建歌单"
@@ -197,6 +201,7 @@ export default {
       list: 0, //歌单
       count: 0,
       likeList: {},
+      moveList: [],
       reEvent: [
         {
           name: "",
@@ -273,6 +278,11 @@ export default {
       this.addLength = this.addArray.length;
       console.log(this.addArray);
       console.log(this.createArray);
+
+      this.moveList = this.createArray[0];
+      console.log(this.moveList);
+
+      //////////////////
       /////////
 
       let res = await eventApi({ uid: getuid() });
@@ -298,11 +308,14 @@ export default {
       }
     },
     heartMove() {
+      // console.log("888");
+      console.log(this.count.length);
       if (this.count.length != 0) {
         this.$router.push({
           name: "Player",
-          query: { ids: this.play },
+          // query: { ids: this.play },
         });
+        this.$store.commit("replace_song", this.play);
       }
     },
   },

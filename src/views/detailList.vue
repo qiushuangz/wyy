@@ -1,20 +1,27 @@
 <template>
   <div class="detailList">
     <div class="detailList_d">
-      <div class="top" style="background: #cecece; width: 100%">
+      <div class="top" style="width: 100%; position: relative">
+        <div
+          class="top_t"
+          style="width: 100vw; height: 100vw"
+          :style="{ backgroundImage: 'url(' + coverImgUrl + ')' }"
+        ></div>
         <div
           src="../assets/mine/tubiao/gengduo.png"
           style="
             display: flex;
             justify-content: space-between;
             padding: 4vw 6vw;
+            color: #fff;
           "
         >
-          <el-page-header @back="goBack" content="歌单"> </el-page-header>
+          <el-page-header size="6vw" @back="goBack" color="#fff">
+          </el-page-header>
           <span>
             <van-icon name="search" size="6vw" />
             <img
-              src="../assets/mine/tubiao/gengduo.png"
+              src="../assets/mine/tubiao/gengduo1.png"
               style="
                 padding-top: -1vw;
                 margin-left: 3vw;
@@ -33,6 +40,7 @@
             align-item: center;
             justify-content: spaced-around;
             margin-left: 6vw;
+            color: #fff;
           "
         >
           <div
@@ -41,7 +49,7 @@
           >
             <img :src="coverImgUrl" alt="" style="width: 100%; height: 100%" />
           </div>
-          <div class="right">
+          <div class="right" style="margin-left: 5vw">
             <p>{{ name }}</p>
             <span style="display: flex; align-tem: center">
               <img :src="photo" class="icon" />
@@ -54,7 +62,7 @@
         </div>
         <div
           class="static"
-          style="display: flex; justify-content: space-around"
+          style="display: flex; justify-content: space-around; color: #fff"
         >
           <dl>
             <dt><van-icon name="orders-o" /></dt>
@@ -95,7 +103,9 @@
         >
           <div style="line-height: 12vw; margin-left: 6vw">
             <i class="el-icon-video-play"></i>
-            <span style="margin-left: 6vw">播放全部(共{{ listlength }}首)</span>
+            <span @click="jump" style="margin-left: 6vw"
+              >播放全部(共{{ listlength }}首)</span
+            >
           </div>
           <div v-for="(i, index) in detail" :key="i.id">
             <div
@@ -186,6 +196,7 @@ export default {
       name: "",
       listlength: "0",
       detail: [],
+      detailId: [],
     };
   },
   name: "detaillist",
@@ -212,8 +223,15 @@ export default {
           icon: "like-o",
         });
       }
-
       console.log(res);
+    },
+    jump() {
+      if (this.detailId.length != 0) {
+        this.$router.push({
+          name: "Player",
+        });
+        this.$store.commit("replace_song", this.detailId);
+      }
     },
   },
   async created() {
@@ -262,12 +280,16 @@ export default {
         song_name: list.playlist.tracks[i].name,
         song_singer: list.playlist.tracks[i].ar[0].name,
       });
+      console.log(list.playlist.tracks[i].id);
+      this.detailId.push(list.playlist.tracks[i].id);
     }
     // for (let i in this.detail) {
     //   const message = await copy({ id: this.detail[i].id });
     //   console.log(message);
     // }
 
+    console.log(this.detailId);
+    this.$store.commit("replace_song", this.detailId);
     console.log(this.detail[0].song_name);
   },
 };
@@ -287,5 +309,13 @@ export default {
 .icon {
   width: 10vw;
   border-radius: 10vw;
+}
+.top_t {
+  background-size: 100% 100%;
+  filter: grayscale(10%) blur(10px) contrast(20%) brightness(90%);
+  z-index: -9;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
