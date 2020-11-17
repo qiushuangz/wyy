@@ -19,8 +19,17 @@ const store = new Vuex.Store({
     maxTime: 0, //歌曲的总时长
     currentTime: 0, //跳转的时间
     Timeupdate: 0, //当前播放时间
+    song_list: [347230, 186010, 186125],
   },
   mutations: {
+    // ------------------
+    push_song(state, data) {
+      state.song_all.push(data);
+    },
+    replace_song(state, data) {
+      state.song_list = data;
+    },
+    //--------------------
     set_url(state, data) {
       state.song_url = data;
     },

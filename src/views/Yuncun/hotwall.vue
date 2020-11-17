@@ -31,9 +31,6 @@
 
 <script>
 import { gethotwallAPI } from "@/api/yuncun";
-// import { Loading } from "element-ui";
-// import { getuid } from "@/utils/tools";
-
 export default {
   data() {
     return {
@@ -85,7 +82,7 @@ export default {
 </script>
 
 <style scoped>
-.hotwall{
+.hotwall {
   padding: 0 6vw;
 }
 .img_tou {
@@ -107,12 +104,7 @@ export default {
 .next i:hover {
   color: aquamarine;
 }
-.van-loading {
-  position: relative;
-  left: 45vw;
-  text-align: center;
-  display: inline-block;
-}
+
 /* .bgc img {
   width: 50%;
   filter: blur(10px);

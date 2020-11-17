@@ -1,8 +1,10 @@
 <template>
   <div class="mine">
-    <topbar
-      style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000"
-    ></topbar>
+    <van-sticky>
+      <topbar
+        style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000"
+      ></topbar>
+    </van-sticky>
     <div class="login_l">
       <div class="login" @click="picture" style="padding: 3vw 0">
         <div class="left" style="display: flex; align-item: center">

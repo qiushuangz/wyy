@@ -1,7 +1,8 @@
 <template>
   <div class="yuncun">
-    <topbar></topbar>
-
+    <van-sticky>
+      <topbar></topbar>
+    </van-sticky>
     <van-tabs animated>
       <van-tab title="热评墙">
         <hotwall></hotwall>

@@ -1,7 +1,9 @@
 <template>
   <div class="find">
     <!-- 导航条 -->
-    <topbar></topbar>
+    <van-sticky>
+      <topbar></topbar>
+    </van-sticky>
     <!-- banner -->
     <van-swipe :autoplay="3000">
       <van-swipe-item v-for="(item, index) in bannerRes" :key="index">
