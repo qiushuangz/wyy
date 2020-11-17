@@ -211,7 +211,6 @@ export default {
       this.songid = this.$route.query.id;
       this.getsonginfo(this.songid);
     } else {
-      console.log(this.song_list);
       this.getsonginfo(this.song_list[0]);
     }
   },
